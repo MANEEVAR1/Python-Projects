@@ -683,4 +683,5 @@ p {
   font-size: 14px;
   letter-spacing: .03em;
   opacity: .85;
+  color: var(--red);
 }
