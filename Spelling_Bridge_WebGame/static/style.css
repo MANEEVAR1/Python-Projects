@@ -100,6 +100,11 @@ button:focus-visible {
   letter-spacing: .04em;
 }
 
+.brand a{
+  text-decoration: none;
+  color: var(--grey);
+}
+
 .snd {
   width: 44px;
   height: 44px;
