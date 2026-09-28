@@ -8,4 +8,4 @@ venv/
 dist/
 build/
 main.py
-Notes_db.py
+Notes_db_sourceCode.py
