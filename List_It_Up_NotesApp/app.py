@@ -26,7 +26,7 @@ def api_create():
 
     notes_id = random.randint(1000, 999999)
     timestamp = time.ctime()
-    result = Notes_db_sourceCode.create_note(int(user_id), user_name, notes_id, notes, timestamp)
+    result = Notes_db.create_note(int(user_id), user_name, notes_id, notes, timestamp)
     return jsonify(result)
 
 @app.route("/api/read", methods=["POST"])
@@ -35,7 +35,7 @@ def api_read():
     notes_id = data.get("notesId")
     if not str(notes_id).isdigit():
         return jsonify({"success": False, "message": "Note ID must be a number."}), 400
-    result = Notes_db_sourceCode.read_note(int(notes_id))
+    result = Notes_db.read_note(int(notes_id))
     return jsonify(result)
 
 @app.route("/api/update", methods=["POST"])
@@ -47,7 +47,7 @@ def api_update():
         return jsonify({"success": False, "message": "Note ID must be a number."}), 400
     if not notes:
         return jsonify({"success": False, "message": "Updated note content cannot be empty."}), 400
-    result = Notes_db_sourceCode.update_note(int(notes_id), notes)
+    result = Notes_db.update_note(int(notes_id), notes)
     return jsonify(result)
 
 @app.route("/api/delete", methods=["POST"])
@@ -56,7 +56,7 @@ def api_delete():
     notes_id = data.get("notesId")
     if not str(notes_id).isdigit():
         return jsonify({"success": False, "message": "Note ID must be a number."}), 400
-    result = Notes_db_sourceCode.delete_note(int(notes_id))
+    result = Notes_db.delete_note(int(notes_id))
     return jsonify(result)
 
 @app.route("/api/all", methods=["POST"])
@@ -67,7 +67,7 @@ def api_all():
         return jsonify({"success": False, "message": "Username is required."}), 400
     if user_name.isdigit():
         return jsonify({"success": False, "message": "Username must be text, not only numbers."}), 400
-    result = Notes_db_sourceCode.see_all_notes(user_name)
+    result = Notes_db.see_all_notes(user_name)
     return jsonify(result)
 
 @app.route("/api/delete-all", methods=["POST"])
@@ -76,7 +76,7 @@ def api_delete_all():
     user_id = data.get("userId")
     if not str(user_id).isdigit():
         return jsonify({"success": False, "message": "User ID must be a number."}), 400
-    result = Notes_db_sourceCode.delete_all_notes(int(user_id))
+    result = Notes_db.delete_all_notes(int(user_id))
     return jsonify(result)
 
 if __name__ == "__main__":
