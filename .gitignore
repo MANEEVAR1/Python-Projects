@@ -2,3 +2,7 @@
 __pycache__/
 cybex_robots_original_sourceCode.py
 robots.db
+List_It_Up_NotesApp/mainSourceCode.py
+List_It_Up_NotesApp/Notes_db_sourceCode.py
+List_It_Up_NotesApp/notes.db
+
