@@ -7,5 +7,5 @@ venv/
 *.egg-info/
 dist/
 build/
-main.py
+mainSourceCode.py
 Notes_db_sourceCode.py

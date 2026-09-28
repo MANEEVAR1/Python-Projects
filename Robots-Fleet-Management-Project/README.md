@@ -30,10 +30,10 @@ A simple command-line admin panel for managing a fleet of robots, backed by a lo
 
 ## Setup
 
-1. Save the two scripts as `main.py` and `db_connections.py` in the same folder.
+1. Save the two scripts as `mainSourceCode.py` and `db_connections.py` in the same folder.
 2. Run the control room:
    ```bash
-   python main.py
+   python mainSourceCode.py
    ```
 3. On first run, `yourDb.db` and the `yourDb` table are created automatically.
 
