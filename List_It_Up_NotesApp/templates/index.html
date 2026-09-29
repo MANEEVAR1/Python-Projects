@@ -1190,8 +1190,8 @@
 
   /* ─── UNIVERSAL BYLINE ───────────────────────── */
   #byline {
-  position: absolute;
-  left: 0;
+  position: fixed;
+   left: 240px;
   right: 0;
   bottom: 18px;
   min-height: 22px;
@@ -1210,6 +1210,17 @@
   text-align: center;
 }
 
+  #byline {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+#byline.show {
+  opacity: 0.85;
+  visibility: visible;
+}
+
   #byline a {
     text-decoration: none;
     color: var(--accent);
@@ -1225,7 +1236,7 @@
     #byline {
       left: 0;
       right: 0;
-      bottom: 18px;
+      bottom: calc(76px + env(safe-area-inset-bottom, 0px));
       font-size: 10px;
       padding: 0 12px;
     }
@@ -4068,7 +4079,28 @@ document
     );
 
   });
+function updateBylineVisibility() {
+  const byline = document.getElementById('byline');
 
+  if (!byline) return;
+
+  const scrollTop = window.scrollY;
+  const viewportHeight = window.innerHeight;
+  const documentHeight = document.documentElement.scrollHeight;
+
+  const isAtBottom =
+    scrollTop + viewportHeight >= documentHeight - 40;
+
+  byline.classList.toggle('show', isAtBottom);
+}
+
+window.addEventListener('scroll', updateBylineVisibility, {
+  passive: true
+});
+
+window.addEventListener('resize', updateBylineVisibility);
+
+updateBylineVisibility();
 </script>
 </body>
 </html>
