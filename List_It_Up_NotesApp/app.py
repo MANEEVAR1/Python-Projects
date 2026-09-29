@@ -27,6 +27,7 @@ def init_db():
                     "userName" TEXT UNIQUE NOT NULL
                 )
             """)
+
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS users_notes (
                     "notesId" INTEGER PRIMARY KEY,
@@ -36,6 +37,7 @@ def init_db():
                     FOREIGN KEY ("userId") REFERENCES users("userId")
                 )
             """)
+
         conn.commit()
     finally:
         conn.close()
@@ -45,7 +47,10 @@ init_db()
 
 
 def error_response(message, status=500):
-    return jsonify({"success": False, "message": message}), status
+    return jsonify({
+        "success": False,
+        "message": message
+    }), status
 
 
 @app.route("/")
@@ -70,26 +75,35 @@ def create_note():
         return error_response("User ID must be a number.", 400)
 
     if user_id <= 0:
-        return error_response("User ID must be a positive number.", 400)
+        return error_response(
+            "User ID must be a positive number.",
+            400
+        )
 
-    timestamp = time.strftime("%B %d, %Y — %I:%M %p")
+    timestamp = time.strftime(
+        "%B %d, %Y — %I:%M %p"
+    )
+
     conn = None
 
     try:
         conn = get_connection()
 
         with conn.cursor() as cursor:
-            # Keep the userId <-> userName relationship consistent.
+
             cursor.execute(
                 'SELECT "userName" FROM users WHERE "userId" = %s',
                 (user_id,)
             )
+
             existing_user = cursor.fetchone()
 
             if existing_user and existing_user[0] != user_name:
                 conn.rollback()
+
                 return error_response(
-                    f'User ID {user_id} belongs to "{existing_user[0]}", not "{user_name}".',
+                    f'User ID {user_id} belongs to '
+                    f'"{existing_user[0]}", not "{user_name}".',
                     409
                 )
 
@@ -97,12 +111,15 @@ def create_note():
                 'SELECT "userId" FROM users WHERE "userName" = %s',
                 (user_name,)
             )
+
             existing_name = cursor.fetchone()
 
             if existing_name and existing_name[0] != user_id:
                 conn.rollback()
+
                 return error_response(
-                    f'Username "{user_name}" is already taken by another user.',
+                    f'Username "{user_name}" is already '
+                    f'taken by another user.',
                     409
                 )
 
@@ -112,29 +129,36 @@ def create_note():
                 ON CONFLICT ("userId") DO NOTHING
             """, (user_id, user_name))
 
-            # Generate and insert the ID atomically. This avoids the
-            # check-then-insert race of SELECT-then-INSERT.
             notes_id = None
 
             for _ in range(20):
                 candidate = random.randint(1, 9_999_999)
+
                 cursor.execute("""
                     INSERT INTO users_notes
                         ("notesId", notes, timestamp, "userId")
                     VALUES (%s, %s, %s, %s)
                     ON CONFLICT ("notesId") DO NOTHING
                     RETURNING "notesId"
-                """, (candidate, notes, timestamp, user_id))
+                """, (
+                    candidate,
+                    notes,
+                    timestamp,
+                    user_id
+                ))
 
                 inserted = cursor.fetchone()
+
                 if inserted is not None:
                     notes_id = inserted[0]
                     break
 
             if notes_id is None:
                 conn.rollback()
+
                 return error_response(
-                    "Could not generate a unique Note ID. Please try again.",
+                    "Could not generate a unique Note ID. "
+                    "Please try again.",
                     503
                 )
 
@@ -150,12 +174,20 @@ def create_note():
     except psycopg2.Error:
         if conn:
             conn.rollback()
-        return error_response("Database error while creating the note.", 500)
+
+        return error_response(
+            "Database error while creating the note.",
+            500
+        )
 
     except Exception:
         if conn:
             conn.rollback()
-        return error_response("Unexpected server error.", 500)
+
+        return error_response(
+            "Unexpected server error.",
+            500
+        )
 
     finally:
         if conn:
@@ -201,10 +233,16 @@ def read_note(notesId):
         })
 
     except psycopg2.Error:
-        return error_response("Database error while reading the note.", 500)
+        return error_response(
+            "Database error while reading the note.",
+            500
+        )
 
     except Exception:
-        return error_response("Unexpected server error.", 500)
+        return error_response(
+            "Unexpected server error.",
+            500
+        )
 
     finally:
         if conn:
@@ -214,12 +252,21 @@ def read_note(notesId):
 @app.route("/api/update/<int:notesId>", methods=["PUT"])
 def update_note(notesId):
     data = request.get_json(silent=True) or {}
-    notes = str(data.get("notes", "")).strip()
+
+    notes = str(
+        data.get("notes", "")
+    ).strip()
 
     if not notes:
-        return error_response("Note content is required.", 400)
+        return error_response(
+            "Note content is required.",
+            400
+        )
 
-    timestamp = time.strftime("%B %d, %Y — %I:%M %p")
+    timestamp = time.strftime(
+        "%B %d, %Y — %I:%M %p"
+    )
+
     conn = None
 
     try:
@@ -228,15 +275,21 @@ def update_note(notesId):
         with conn.cursor() as cursor:
             cursor.execute("""
                 UPDATE users_notes
-                SET notes = %s, timestamp = %s
+                SET notes = %s,
+                    timestamp = %s
                 WHERE "notesId" = %s
                 RETURNING "notesId"
-            """, (notes, timestamp, notesId))
+            """, (
+                notes,
+                timestamp,
+                notesId
+            ))
 
             updated = cursor.fetchone()
 
             if updated is None:
                 conn.rollback()
+
                 return error_response(
                     f"No note found with ID #{notesId}.",
                     404
@@ -253,12 +306,20 @@ def update_note(notesId):
     except psycopg2.Error:
         if conn:
             conn.rollback()
-        return error_response("Database error while updating the note.", 500)
+
+        return error_response(
+            "Database error while updating the note.",
+            500
+        )
 
     except Exception:
         if conn:
             conn.rollback()
-        return error_response("Unexpected server error.", 500)
+
+        return error_response(
+            "Unexpected server error.",
+            500
+        )
 
     finally:
         if conn:
@@ -273,8 +334,6 @@ def delete_note(notesId):
         conn = get_connection()
 
         with conn.cursor() as cursor:
-            # RETURNING makes the operation atomic:
-            # no separate SELECT + DELETE race.
             cursor.execute("""
                 DELETE FROM users_notes
                 WHERE "notesId" = %s
@@ -285,6 +344,7 @@ def delete_note(notesId):
 
             if deleted is None:
                 conn.rollback()
+
                 return error_response(
                     f"No note found with ID #{notesId}.",
                     404
@@ -300,12 +360,20 @@ def delete_note(notesId):
     except psycopg2.Error:
         if conn:
             conn.rollback()
-        return error_response("Database error while deleting the note.", 500)
+
+        return error_response(
+            "Database error while deleting the note.",
+            500
+        )
 
     except Exception:
         if conn:
             conn.rollback()
-        return error_response("Unexpected server error.", 500)
+
+        return error_response(
+            "Unexpected server error.",
+            500
+        )
 
     finally:
         if conn:
@@ -317,7 +385,10 @@ def see_all_notes(userName):
     user_name = userName.strip()
 
     if not user_name:
-        return error_response("Username is required.", 400)
+        return error_response(
+            "Username is required.",
+            400
+        )
 
     conn = None
 
@@ -325,10 +396,12 @@ def see_all_notes(userName):
         conn = get_connection()
 
         with conn.cursor() as cursor:
+
             cursor.execute(
                 'SELECT "userId" FROM users WHERE "userName" = %s',
                 (user_name,)
             )
+
             user = cursor.fetchone()
 
             if user is None:
@@ -338,7 +411,10 @@ def see_all_notes(userName):
                 )
 
             cursor.execute("""
-                SELECT "notesId", notes, timestamp
+                SELECT
+                    "notesId",
+                    notes,
+                    timestamp
                 FROM users_notes
                 WHERE "userId" = %s
                 ORDER BY "notesId" DESC
@@ -362,10 +438,16 @@ def see_all_notes(userName):
         })
 
     except psycopg2.Error:
-        return error_response("Database error while loading notes.", 500)
+        return error_response(
+            "Database error while loading notes.",
+            500
+        )
 
     except Exception:
-        return error_response("Unexpected server error.", 500)
+        return error_response(
+            "Unexpected server error.",
+            500
+        )
 
     finally:
         if conn:
@@ -390,6 +472,7 @@ def delete_all_notes(userId):
 
             if not deleted_rows:
                 conn.rollback()
+
                 return error_response(
                     f"No notes found for User ID {userId}.",
                     404
@@ -401,19 +484,29 @@ def delete_all_notes(userId):
 
         return jsonify({
             "success": True,
-            "message": f"All {count} notes deleted successfully.",
+            "message": (
+                f"All {count} notes deleted successfully."
+            ),
             "count": count
         })
 
     except psycopg2.Error:
         if conn:
             conn.rollback()
-        return error_response("Database error while deleting notes.", 500)
+
+        return error_response(
+            "Database error while deleting notes.",
+            500
+        )
 
     except Exception:
         if conn:
             conn.rollback()
-        return error_response("Unexpected server error.", 500)
+
+        return error_response(
+            "Unexpected server error.",
+            500
+        )
 
     finally:
         if conn:
@@ -421,5 +514,12 @@ def delete_all_notes(userId):
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=False)
+    port = int(
+        os.environ.get("PORT", 5000)
+    )
+
+    app.run(
+        host="0.0.0.0",
+        port=port,
+        debug=False
+    )
