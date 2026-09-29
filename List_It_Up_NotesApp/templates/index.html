@@ -34,10 +34,13 @@
 
   html, body {
     height: 100%;
+    width: 100%;
+    max-width: 100%;
     font-family: 'Inter', sans-serif;
     background: var(--bg);
     color: var(--ink);
     overflow: hidden;
+    overscroll-behavior: none;
   }
 
   /* ─── LAYOUT ─────────────────────────────────── */
@@ -45,6 +48,9 @@
     display: grid;
     grid-template-columns: 240px 1fr;
     height: 100vh;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
     position: relative;
   }
 
@@ -172,6 +178,10 @@
     overflow-x: hidden;
     position: relative;
     scroll-behavior: smooth;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    min-width: 0;
   }
 
   .main::-webkit-scrollbar { width: 4px; }
@@ -182,7 +192,10 @@
   .screen {
     display: none;
     animation: screenIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    min-height: 100vh;
+    min-height: 100%;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
   .screen.active { display: flex; flex-direction: column; }
@@ -199,18 +212,20 @@
     text-align: center;
     padding: 60px 40px;
     position: relative;
+    overflow: hidden;
   }
 
   .home-bg-orb {
     position: absolute;
-    width: 480px;
-    height: 480px;
+    width: min(480px, 100vw);
+    height: min(480px, 100vw);
     border-radius: 50%;
     background: radial-gradient(circle, rgba(200,169,110,0.06) 0%, transparent 65%);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     pointer-events: none;
+    overflow: hidden;
   }
 
   .home-eyebrow {
@@ -895,7 +910,17 @@
     background: var(--bg-2);
     border-top: 1px solid var(--border);
     z-index: 50;
-    padding: 8px 0 env(safe-area-inset-bottom, 8px);
+    padding: 0 0 env(safe-area-inset-bottom, 6px);
+  }
+
+  .mobile-byline {
+    text-align: center;
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+    padding: 5px 0 0;
+    opacity: 0.8;
   }
 
   .mobile-nav-inner {
@@ -931,17 +956,23 @@
   }
 
   @media (max-width: 768px) {
-    html, body { overflow: hidden; }
+    html, body {
+      overflow: hidden;
+      overscroll-behavior: none;
+      touch-action: pan-y;
+    }
 
     .shell {
       grid-template-columns: 1fr;
       height: 100vh;
+      overflow: hidden;
     }
 
     .sidebar { display: none; }
 
     .main {
       padding-bottom: 70px;
+      overscroll-behavior-y: contain;
     }
 
     .mobile-nav { display: block; }
@@ -950,13 +981,14 @@
     .screen-body { padding: 20px; }
 
     #screen-home {
-      padding: 40px 20px 20px;
+      padding: 40px 20px 80px;
       justify-content: flex-start;
       overflow-y: auto;
-      min-height: calc(100vh - 70px);
+      overflow-x: hidden;
+      overscroll-behavior-y: contain;
     }
 
-    .home-heading { font-size: 30px; }
+    .home-heading { font-size: 28px; }
     .home-grid {
       grid-template-columns: repeat(2, 1fr);
       max-width: 100%;
@@ -971,13 +1003,18 @@
     .btn-row { flex-direction: column; }
     .btn-row .btn { width: 100%; justify-content: center; }
 
-    .danger-zone { padding: 20px; }
+    .danger-zone { padding: 20px; max-width: 100%; }
 
     .notes-grid { grid-template-columns: 1fr; }
 
     #toast { bottom: 82px; right: 16px; left: 16px; max-width: none; }
 
     .screen-title { font-size: 22px; }
+
+    .screen-body { overflow-x: hidden; }
+
+    .note-card { padding: 18px 16px; }
+    .note-card-body { font-size: 13.5px; }
   }
 
   @media (max-width: 400px) {
@@ -1000,6 +1037,40 @@
   }
 
   @keyframes rippleAnim { to { transform: scale(4); opacity: 0; } }
+
+  /* ─── UNIVERSAL BYLINE ───────────────────────── */
+  #byline {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    background: var(--bg-2);
+    border-top: 1px solid var(--border);
+    z-index: 200;
+    pointer-events: none;
+    opacity: 0.85;
+  }
+
+  /* On desktop the sidebar is 240px wide — keep byline flush right of it */
+  @media (min-width: 769px) {
+    #byline { left: 240px; }
+    .main   { padding-bottom: 22px; }
+  }
+
+  /* On mobile the mobile-nav sits above byline — byline replaces its old strip */
+  @media (max-width: 768px) {
+    .mobile-nav { padding-bottom: calc(22px + env(safe-area-inset-bottom, 0px)); }
+    #byline     { bottom: 0; }
+    #toast      { bottom: calc(22px + 70px); }
+  }
 </style>
 </head>
 <body>
@@ -1327,6 +1398,7 @@
 
 <!-- MOBILE NAV -->
 <nav class="mobile-nav">
+  <div class="mobile-byline">Developed By Maneev Arora 👑</div>
   <div class="mobile-nav-inner">
     <button class="mobile-nav-btn active" id="mnav-home" onclick="navigate('home')">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
@@ -1396,6 +1468,32 @@ function vibrate(pattern) { if (navigator.vibrate) navigator.vibrate(pattern); }
 ══════════════════════════════════════════ */
 let currentScreen = 'home';
 
+// Fields and result areas to reset per screen
+const SCREEN_RESETS = {
+  create:    { inputs: ['c-userId','c-userName','c-notes'], results: ['create-result'], counters: [{id:'c-counter',max:2000}] },
+  read:      { inputs: ['r-noteId'], results: ['read-result'], dynamic: true },
+  update:    { inputs: ['u-noteId','u-notes'], results: ['update-result'], counters: [{id:'u-counter',max:2000}] },
+  delete:    { inputs: ['d-noteId'], results: ['delete-result'] },
+  all:       { inputs: ['a-userName'], results: ['all-result'], dynamic: true },
+  deleteall: { inputs: ['da-userId'], results: ['deleteall-result'] },
+};
+
+function clearScreen(screen) {
+  const cfg = SCREEN_RESETS[screen];
+  if (!cfg) return;
+  (cfg.inputs || []).forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  (cfg.results || []).forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (cfg.dynamic) el.innerHTML = '';
+    else el.className = 'result-box';
+  });
+  (cfg.counters || []).forEach(c => {
+    const el = document.getElementById(c.id);
+    if (el) { el.textContent = `0 / ${c.max}`; el.classList.remove('warn'); }
+  });
+}
+
 function navigate(screen) {
   soundNav();
   vibrate(20);
@@ -1404,13 +1502,16 @@ function navigate(screen) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.remove('active'));
 
+  // Clear the destination screen's fields every time
+  clearScreen(screen);
+
   const target = document.getElementById('screen-' + screen);
   const navTarget = document.getElementById('nav-' + screen);
   const mnavTarget = document.getElementById('mnav-' + screen);
 
   if (target) {
     target.classList.add('active');
-    document.getElementById('main').scrollTo({ top: 0, behavior: 'smooth' });
+    document.getElementById('main').scrollTo({ top: 0, behavior: 'instant' });
   }
   if (navTarget) navTarget.classList.add('active');
   if (mnavTarget) mnavTarget.classList.add('active');
@@ -1526,18 +1627,26 @@ function clearForm(screen) {
 }
 
 /* ══════════════════════════════════════════
-   TIMESTAMP — uses local time correctly
+   TIMESTAMP — always reads the browser's
+   local clock, never trusts the server
 ══════════════════════════════════════════ */
 function getLocalTimestamp() {
-  const now = new Date();
-  const pad = n => String(n).padStart(2, '0');
-  const day   = pad(now.getDate());
-  const month = pad(now.getMonth() + 1);
-  const year  = now.getFullYear();
-  const hours = pad(now.getHours());
-  const mins  = pad(now.getMinutes());
-  const secs  = pad(now.getSeconds());
-  return `${day}/${month}/${year}, ${hours}:${mins}:${secs}`;
+  try {
+    return new Intl.DateTimeFormat(undefined, {
+      day:    '2-digit',
+      month:  '2-digit',
+      year:   'numeric',
+      hour:   '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    }).format(new Date());
+  } catch (e) {
+    // Fallback if Intl is unavailable
+    const d = new Date();
+    const p = n => String(n).padStart(2, '0');
+    return `${p(d.getDate())}/${p(d.getMonth()+1)}/${d.getFullYear()}, ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+  }
 }
 
 /* ══════════════════════════════════════════
@@ -1568,20 +1677,19 @@ async function handleCreate() {
   setLoading('btn-create', true);
   loadingStart();
 
-  // Pass client-side local timestamp to backend so it stores the right time
+  const localTs = getLocalTimestamp(); // capture before async
   const data = await api('POST', '/api/create', {
     userId: parseInt(userId), userName, notes,
-    clientTimestamp: getLocalTimestamp()
+    clientTimestamp: localTs
   });
   loadingEnd();
   setLoading('btn-create', false);
 
   if (data.success) {
     soundSuccess(); vibrate([30,50,30]); spawnPulse();
-    const ts = data.timestamp || getLocalTimestamp();
     showResult('create-result', 'success', 'Note Saved',
       data.message,
-      `<div class="note-id-reveal"><span>Your Note ID</span>&nbsp; #${data.notesId}</div><br/>Created at: ${ts}`
+      `<div class="note-id-reveal"><span>Your Note ID</span>&nbsp; #${data.notesId}</div><br/>Created at: ${localTs}`
     );
     showToast('Note created — ID #' + data.notesId);
   } else {
@@ -1643,13 +1751,14 @@ async function handleUpdate() {
   setLoading('btn-update', true);
   loadingStart();
 
-  const data = await api('PUT', '/api/update/' + noteId, { notes, clientTimestamp: getLocalTimestamp() });
+  const localTs = getLocalTimestamp(); // capture before async
+  const data = await api('PUT', '/api/update/' + noteId, { notes, clientTimestamp: localTs });
   loadingEnd();
   setLoading('btn-update', false);
 
   if (data.success) {
     soundSuccess(); vibrate([20,40,20]); spawnPulse();
-    showResult('update-result', 'success', 'Updated', data.message, 'Last edited: ' + (data.timestamp || getLocalTimestamp()));
+    showResult('update-result', 'success', 'Updated', data.message, 'Last edited: ' + localTs);
     showToast('Note #' + noteId + ' updated.');
   } else {
     soundError(); vibrate([40,20,40]);
