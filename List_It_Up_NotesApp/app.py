@@ -190,7 +190,7 @@ def delete_all_notes(userId):
     try:
         conn   = get_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT notesId FROM users_notes WHERE userId = %s", (userId,))
+        cursor.execute("SELECT notes FROM users_notes WHERE userId = %s", (userId,))
         rows = cursor.fetchall()
         if not rows:
             cursor.close(); conn.close()
