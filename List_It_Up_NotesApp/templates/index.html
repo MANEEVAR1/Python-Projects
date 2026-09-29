@@ -1043,13 +1043,13 @@
     letter-spacing: 0.06em;
     color: var(--accent);
     z-index: 200;
-    pointer-events: none;
+    pointer-events: auto;
     opacity: 0.85;
   }
 
   #byline a{
     text-decoration: none;
-    color: red;
+    color: var(--accent);
   }
 
   /* On desktop the sidebar is 240px wide — keep byline flush right of it */
@@ -1070,7 +1070,7 @@
 
 <div id="loading-bar"></div>
 
-<div id="byline">Developed By <a href="https://www.linkedin.com/in/maneev-arora" target="_blank">Maneev Arora</a> 👑</div>
+<div id="byline"><span>Developed By </span><a href="https://www.linkedin.com/in/maneev-arora" target="_blank">Maneev Arora</a><span> 👑</span></div>
 
 <!-- CONFIRM DIALOG -->
 <div class="overlay" id="overlay">
