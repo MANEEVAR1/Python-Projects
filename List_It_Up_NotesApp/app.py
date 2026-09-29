@@ -221,8 +221,7 @@ def read_note(notesId):
                 f"No note found with ID #{notesId}.",
                 404
             )
-
-        return jsonify({
+        result = {
             "success": True,
             "note": {
                 "id": row[0],
@@ -230,7 +229,10 @@ def read_note(notesId):
                 "timestamp": row[2],
                 "author": row[3]
             }
-        })
+        }
+        print("Read Note Result:")
+        print(result)
+        return jsonify(result)
 
     except psycopg2.Error:
         return error_response(
@@ -431,11 +433,14 @@ def see_all_notes(userName):
             for row in rows
         ]
 
-        return jsonify({
+        result = {
             "success": True,
             "notes": notes,
             "userName": user_name
-        })
+        }
+        print("All Notes Result:")
+        print(result)
+        return jsonify(result)
 
     except psycopg2.Error:
         return error_response(
