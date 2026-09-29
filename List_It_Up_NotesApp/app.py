@@ -103,7 +103,7 @@ def create_note():
 
                 return error_response(
                     f'User ID {user_id} belongs to '
-                    f'"{existing_user[0]}", not "{user_name}".',
+                    f'"someone else. Try Again',
                     409
                 )
 
