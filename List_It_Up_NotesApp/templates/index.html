@@ -4,35 +4,38 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>List It Up</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet" />
 <style>
   /* ─── TOKENS ─────────────────────────────────── */
   :root {
-    --navy:       #2C3E50;
-    --navy-deep:  #1A252F;
-    --navy-mid:   #243342;
-    --navy-light: #354D63;
-    --wine:       #722F37;
-    --wine-light: #8B3A44;
-    --wine-muted: #4A1E23;
-    --ink:        #F0EBE3;
-    --ink-dim:    #A8B4BE;
-    --ink-ghost:  #4F6070;
-    --success:    #3D7A5E;
-    --error:      #C0392B;
-    --radius:     12px;
+    --bg:         #0A0A0A;
+    --bg-2:       #111111;
+    --bg-3:       #1A1A1A;
+    --bg-4:       #222222;
+    --border:     rgba(255,255,255,0.07);
+    --border-2:   rgba(255,255,255,0.12);
+    --accent:     #C8A96E;
+    --accent-dim: rgba(200,169,110,0.15);
+    --accent-glow:rgba(200,169,110,0.08);
+    --ink:        #F2F0ED;
+    --ink-dim:    #8A8A8A;
+    --ink-ghost:  #444444;
+    --success:    #4A9B6F;
+    --error:      #B85450;
+    --radius:     10px;
     --radius-sm:  6px;
-    --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   html, body {
     height: 100%;
-    font-family: 'Raleway', sans-serif;
-    background: var(--navy-deep);
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
     color: var(--ink);
     overflow: hidden;
   }
@@ -40,45 +43,45 @@
   /* ─── LAYOUT ─────────────────────────────────── */
   .shell {
     display: grid;
-    grid-template-columns: 260px 1fr;
+    grid-template-columns: 240px 1fr;
     height: 100vh;
     position: relative;
   }
 
   /* ─── SIDEBAR ────────────────────────────────── */
   .sidebar {
-    background: var(--navy-deep);
-    border-right: 1px solid rgba(255,255,255,0.06);
+    background: var(--bg-2);
+    border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    padding: 40px 0 32px;
+    padding: 36px 0 28px;
     position: relative;
     z-index: 10;
   }
 
   .brand {
-    padding: 0 28px 40px;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    margin-bottom: 32px;
+    padding: 0 24px 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 28px;
   }
 
   .brand-mark {
-    width: 36px;
-    height: 36px;
-    background: var(--wine);
-    border-radius: 8px;
-    margin-bottom: 14px;
+    width: 32px;
+    height: 32px;
+    background: var(--accent);
+    border-radius: 6px;
+    margin-bottom: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  .brand-mark svg { width: 18px; height: 18px; fill: var(--ink); }
+  .brand-mark svg { width: 16px; height: 16px; fill: #0A0A0A; }
 
   .brand-name {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
-    letter-spacing: 0.01em;
+    letter-spacing: -0.01em;
     line-height: 1;
     color: var(--ink);
   }
@@ -87,17 +90,17 @@
     font-size: 11px;
     font-weight: 400;
     color: var(--ink-ghost);
-    margin-top: 5px;
-    letter-spacing: 0.06em;
+    margin-top: 4px;
+    letter-spacing: 0.02em;
   }
 
-  .nav { flex: 1; padding: 0 16px; }
+  .nav { flex: 1; padding: 0 12px; }
 
   .nav-section-label {
-    font-size: 9.5px;
+    font-size: 9px;
     font-weight: 600;
     color: var(--ink-ghost);
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     padding: 0 12px;
     margin-bottom: 8px;
@@ -106,96 +109,86 @@
   .nav-item {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 11px 14px;
+    gap: 10px;
+    padding: 9px 12px;
     border-radius: var(--radius-sm);
     cursor: pointer;
-    font-size: 13.5px;
+    font-size: 13px;
     font-weight: 500;
     color: var(--ink-dim);
-    transition: background var(--transition), color var(--transition), transform 0.15s ease;
-    margin-bottom: 2px;
+    transition: background var(--transition), color var(--transition);
+    margin-bottom: 1px;
     user-select: none;
     position: relative;
-    overflow: hidden;
   }
 
-  .nav-item::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--wine);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    border-radius: var(--radius-sm);
-  }
-
-  .nav-item:hover { color: var(--ink); transform: translateX(2px); }
-  .nav-item:hover::before { opacity: 0.12; }
+  .nav-item:hover { color: var(--ink); background: var(--bg-3); }
 
   .nav-item.active {
-    color: var(--ink);
-    background: rgba(114, 47, 55, 0.18);
+    color: var(--accent);
+    background: var(--accent-dim);
   }
-  .nav-item.active::before { opacity: 0; }
 
-  .nav-item.active .nav-icon { color: var(--wine-light); }
+  .nav-item.active .nav-icon { color: var(--accent); }
 
   .nav-icon {
-    width: 16px;
-    height: 16px;
+    width: 15px;
+    height: 15px;
     flex-shrink: 0;
-    position: relative;
-    z-index: 1;
+    stroke: currentColor;
   }
 
-  .nav-label { position: relative; z-index: 1; }
-
-  .nav-item .nav-dot {
+  .nav-dot {
     width: 4px;
     height: 4px;
     border-radius: 50%;
-    background: var(--wine-light);
+    background: var(--accent);
     margin-left: auto;
     opacity: 0;
     transition: opacity 0.3s;
-    position: relative;
-    z-index: 1;
   }
 
   .nav-item.active .nav-dot { opacity: 1; }
 
   .sidebar-footer {
-    padding: 20px 28px 0;
-    border-top: 1px solid rgba(255,255,255,0.06);
-    font-size: 11px;
+    padding: 20px 24px 0;
+    border-top: 1px solid var(--border);
+    font-size: 10.5px;
     color: var(--ink-ghost);
     line-height: 1.7;
+    font-weight: 400;
+  }
+
+  .sidebar-footer strong {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 10px;
   }
 
   /* ─── MAIN ───────────────────────────────────── */
   .main {
-    background: var(--navy);
+    background: var(--bg);
     overflow-y: auto;
+    overflow-x: hidden;
     position: relative;
     scroll-behavior: smooth;
   }
 
-  .main::-webkit-scrollbar { width: 5px; }
+  .main::-webkit-scrollbar { width: 4px; }
   .main::-webkit-scrollbar-track { background: transparent; }
-  .main::-webkit-scrollbar-thumb { background: var(--navy-light); border-radius: 10px; }
+  .main::-webkit-scrollbar-thumb { background: var(--bg-4); border-radius: 10px; }
 
   /* ─── SCREENS ────────────────────────────────── */
   .screen {
     display: none;
-    animation: screenIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation: screenIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     min-height: 100vh;
   }
 
   .screen.active { display: flex; flex-direction: column; }
 
   @keyframes screenIn {
-    from { opacity: 0; transform: translateY(18px); }
+    from { opacity: 0; transform: translateY(14px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
@@ -204,59 +197,55 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 60px 48px;
+    padding: 60px 40px;
     position: relative;
   }
 
   .home-bg-orb {
     position: absolute;
-    width: 500px;
-    height: 500px;
+    width: 480px;
+    height: 480px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(114,47,55,0.12) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(200,169,110,0.06) 0%, transparent 65%);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     pointer-events: none;
-    animation: orbPulse 6s ease-in-out infinite;
-  }
-
-  @keyframes orbPulse {
-    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
-    50%       { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
   }
 
   .home-eyebrow {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
-    letter-spacing: 0.2em;
-    color: var(--wine-light);
+    letter-spacing: 0.18em;
+    color: var(--accent);
     margin-bottom: 20px;
     position: relative;
+    text-transform: uppercase;
   }
 
   .home-heading {
-    font-size: clamp(38px, 5vw, 58px);
-    font-weight: 800;
-    line-height: 1.08;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(34px, 4.5vw, 52px);
+    font-weight: 700;
+    line-height: 1.1;
     color: var(--ink);
-    letter-spacing: -0.02em;
-    margin-bottom: 20px;
+    letter-spacing: -0.01em;
+    margin-bottom: 18px;
     position: relative;
   }
 
   .home-heading em {
     font-style: italic;
-    font-weight: 300;
+    font-weight: 400;
     color: var(--ink-dim);
   }
 
   .home-sub {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 400;
     color: var(--ink-dim);
-    max-width: 380px;
-    line-height: 1.7;
+    max-width: 360px;
+    line-height: 1.75;
     margin: 0 auto 44px;
     position: relative;
   }
@@ -264,94 +253,117 @@
   .home-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    max-width: 680px;
+    gap: 12px;
+    max-width: 620px;
     width: 100%;
     position: relative;
   }
 
   .home-card {
-    background: var(--navy-mid);
-    border: 1px solid rgba(255,255,255,0.06);
+    background: var(--bg-2);
+    border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 24px 20px;
+    padding: 20px 18px;
     cursor: pointer;
-    transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    transition: border-color 0.2s ease, background 0.2s ease;
     text-align: left;
   }
 
   .home-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(114,47,55,0.5);
-    background: var(--navy-light);
+    border-color: rgba(200,169,110,0.35);
+    background: var(--bg-3);
   }
 
   .home-card-icon {
-    width: 38px;
-    height: 38px;
-    background: rgba(114,47,55,0.15);
-    border-radius: 8px;
+    width: 34px;
+    height: 34px;
+    background: var(--accent-dim);
+    border-radius: 7px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 14px;
-    color: var(--wine-light);
+    margin-bottom: 12px;
+    color: var(--accent);
   }
 
   .home-card-title {
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 700;
     color: var(--ink);
-    margin-bottom: 5px;
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
   }
 
   .home-card-desc {
-    font-size: 11.5px;
+    font-size: 11px;
     font-weight: 400;
     color: var(--ink-ghost);
-    line-height: 1.5;
+    line-height: 1.55;
   }
 
   /* ─── SCREEN LAYOUTS ─────────────────────────── */
   .screen-header {
-    padding: 48px 52px 32px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding: 40px 48px 28px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
   }
 
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--ink-dim);
+    cursor: pointer;
+    margin-bottom: 18px;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    user-select: none;
+  }
+
+  .back-btn:hover { color: var(--accent); }
+  .back-btn svg { width: 14px; height: 14px; stroke: currentColor; flex-shrink: 0; }
+
   .screen-header-eyebrow {
-    font-size: 10px;
+    font-size: 9.5px;
     font-weight: 600;
-    letter-spacing: 0.18em;
-    color: var(--wine-light);
-    margin-bottom: 10px;
+    letter-spacing: 0.16em;
+    color: var(--accent);
+    margin-bottom: 8px;
+    text-transform: uppercase;
   }
 
   .screen-title {
-    font-size: 30px;
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
     font-weight: 700;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     color: var(--ink);
-    line-height: 1.1;
+    line-height: 1.15;
   }
 
   .screen-subtitle {
     font-size: 13px;
     font-weight: 400;
     color: var(--ink-dim);
-    margin-top: 6px;
-    line-height: 1.6;
+    margin-top: 5px;
+    line-height: 1.65;
   }
 
   .screen-body {
-    padding: 40px 52px;
+    padding: 36px 48px;
     flex: 1;
   }
 
   /* ─── FORM ELEMENTS ──────────────────────────── */
   .form-row {
     display: grid;
-    gap: 20px;
-    margin-bottom: 20px;
+    gap: 16px;
+    margin-bottom: 16px;
   }
 
   .form-row.cols-2 { grid-template-columns: 1fr 1fr; }
@@ -359,28 +371,28 @@
   .field {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 7px;
   }
 
   label {
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 600;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     color: var(--ink-dim);
     text-transform: uppercase;
   }
 
   input, textarea {
-    background: var(--navy-mid);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: var(--bg-2);
+    border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    padding: 13px 16px;
-    font-family: 'Raleway', sans-serif;
-    font-size: 14px;
+    padding: 12px 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
     font-weight: 400;
     color: var(--ink);
     outline: none;
-    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    transition: border-color 0.2s ease, background 0.2s ease;
     width: 100%;
   }
 
@@ -390,9 +402,8 @@
   }
 
   input:focus, textarea:focus {
-    border-color: rgba(114,47,55,0.6);
-    box-shadow: 0 0 0 3px rgba(114,47,55,0.12);
-    background: var(--navy-light);
+    border-color: rgba(200,169,110,0.5);
+    background: var(--bg-3);
   }
 
   textarea {
@@ -406,120 +417,101 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 13px 28px;
+    gap: 7px;
+    padding: 11px 24px;
     border-radius: var(--radius-sm);
     border: none;
     cursor: pointer;
-    font-family: 'Raleway', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+    font-family: 'Inter', sans-serif;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    transition: opacity 0.2s, background 0.2s;
     user-select: none;
     position: relative;
     overflow: hidden;
   }
 
-  .btn::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgba(255,255,255,0.15);
-    opacity: 0;
-    transition: opacity 0.15s;
-    border-radius: var(--radius-sm);
-  }
-
-  .btn:active { transform: scale(0.97); }
-  .btn:active::after { opacity: 1; }
+  .btn:active { opacity: 0.8; }
 
   .btn-primary {
-    background: var(--wine);
-    color: var(--ink);
-    box-shadow: 0 4px 20px rgba(114,47,55,0.3);
+    background: var(--accent);
+    color: #0A0A0A;
   }
 
-  .btn-primary:hover {
-    background: var(--wine-light);
-    box-shadow: 0 6px 28px rgba(114,47,55,0.45);
-    transform: translateY(-1px);
-  }
+  .btn-primary:hover { background: #D4BA82; }
 
   .btn-ghost {
-    background: rgba(255,255,255,0.05);
+    background: var(--bg-3);
     color: var(--ink-dim);
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid var(--border);
   }
 
   .btn-ghost:hover {
-    background: rgba(255,255,255,0.09);
+    background: var(--bg-4);
     color: var(--ink);
   }
 
   .btn-danger {
-    background: rgba(192, 57, 43, 0.15);
-    color: #E57373;
-    border: 1px solid rgba(192,57,43,0.25);
+    background: rgba(184,84,80,0.12);
+    color: #D47A78;
+    border: 1px solid rgba(184,84,80,0.2);
   }
 
   .btn-danger:hover {
-    background: rgba(192, 57, 43, 0.25);
-    box-shadow: 0 4px 16px rgba(192,57,43,0.2);
+    background: rgba(184,84,80,0.2);
   }
 
-  .btn-loading {
-    pointer-events: none;
-    opacity: 0.7;
-  }
+  .btn-loading { pointer-events: none; opacity: 0.6; }
 
-  .btn svg { width: 15px; height: 15px; }
+  .btn svg { width: 14px; height: 14px; }
 
   .btn-row {
     display: flex;
-    gap: 12px;
-    margin-top: 28px;
+    gap: 10px;
+    margin-top: 24px;
     align-items: center;
+    flex-wrap: wrap;
   }
 
   /* ─── RESULT / TOAST STATES ──────────────────── */
   .result-box {
-    margin-top: 24px;
+    margin-top: 20px;
     border-radius: var(--radius);
-    padding: 20px 24px;
-    font-size: 13.5px;
+    padding: 18px 22px;
+    font-size: 13px;
     font-weight: 500;
     line-height: 1.6;
-    animation: resultSlide 0.35s cubic-bezier(0.4,0,0.2,1);
+    animation: resultSlide 0.3s cubic-bezier(0.4,0,0.2,1);
     display: none;
   }
 
   .result-box.show { display: block; }
 
   @keyframes resultSlide {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
   .result-box.success {
-    background: rgba(61,122,94,0.15);
-    border: 1px solid rgba(61,122,94,0.35);
+    background: rgba(74,155,111,0.1);
+    border: 1px solid rgba(74,155,111,0.25);
     color: #7ECBA9;
   }
 
   .result-box.error {
-    background: rgba(192,57,43,0.12);
-    border: 1px solid rgba(192,57,43,0.3);
-    color: #E88080;
+    background: rgba(184,84,80,0.1);
+    border: 1px solid rgba(184,84,80,0.25);
+    color: #D47A78;
   }
 
   .result-box-label {
-    font-size: 10px;
+    font-size: 9.5px;
     font-weight: 700;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    margin-bottom: 6px;
-    opacity: 0.7;
+    margin-bottom: 5px;
+    opacity: 0.65;
   }
 
   .result-box-message { font-weight: 500; }
@@ -527,40 +519,42 @@
   .result-box-meta {
     margin-top: 10px;
     padding-top: 10px;
-    border-top: 1px solid rgba(255,255,255,0.08);
-    font-size: 12px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    font-size: 11.5px;
     font-weight: 400;
     color: var(--ink-dim);
   }
 
-  /* ─── NOTE CARD (read / list) ────────────────── */
+  /* ─── NOTE CARD ──────────────────────────────── */
   .note-card {
-    background: var(--navy-mid);
-    border: 1px solid rgba(255,255,255,0.07);
+    background: var(--bg-2);
+    border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 28px 32px;
-    animation: noteReveal 0.45s cubic-bezier(0.4,0,0.2,1) forwards;
+    padding: 26px 30px;
+    animation: noteReveal 0.4s cubic-bezier(0.4,0,0.2,1) forwards;
   }
 
   @keyframes noteReveal {
-    from { opacity: 0; transform: scale(0.97) translateY(12px); }
-    to   { opacity: 1; transform: scale(1) translateY(0); }
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
   .note-card-header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
   }
 
-  .note-card-meta { display: flex; flex-direction: column; gap: 4px; }
+  .note-card-meta { display: flex; flex-direction: column; gap: 3px; }
 
   .note-card-id {
-    font-size: 10px;
+    font-size: 9.5px;
     font-weight: 700;
-    letter-spacing: 0.12em;
-    color: var(--wine-light);
+    letter-spacing: 0.1em;
+    color: var(--accent);
     text-transform: uppercase;
   }
 
@@ -580,10 +574,10 @@
   .note-card-actions { display: flex; gap: 8px; }
 
   .note-card-body {
-    font-size: 15px;
+    font-size: 14.5px;
     font-weight: 400;
     color: var(--ink);
-    line-height: 1.75;
+    line-height: 1.8;
     white-space: pre-wrap;
     word-break: break-word;
   }
@@ -591,46 +585,43 @@
   /* ─── ALL NOTES GRID ─────────────────────────── */
   .notes-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
   }
 
   .notes-grid-item {
-    background: var(--navy-mid);
-    border: 1px solid rgba(255,255,255,0.06);
+    background: var(--bg-2);
+    border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 22px 24px;
+    padding: 20px 22px;
     cursor: pointer;
-    transition: transform 0.2s ease, border-color 0.2s ease;
+    transition: border-color 0.2s ease;
     animation: noteReveal 0.4s ease forwards;
-    animation-delay: calc(var(--i, 0) * 0.06s);
+    animation-delay: calc(var(--i, 0) * 0.05s);
     opacity: 0;
   }
 
-  .notes-grid-item:hover {
-    transform: translateY(-3px);
-    border-color: rgba(114,47,55,0.4);
-  }
+  .notes-grid-item:hover { border-color: rgba(200,169,110,0.35); }
 
   .notes-grid-item .id-badge {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    background: rgba(114,47,55,0.14);
-    color: var(--wine-light);
-    font-size: 10px;
+    gap: 4px;
+    background: var(--accent-dim);
+    color: var(--accent);
+    font-size: 9.5px;
     font-weight: 700;
-    letter-spacing: 0.1em;
-    padding: 3px 10px;
+    letter-spacing: 0.08em;
+    padding: 3px 9px;
     border-radius: 20px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
 
   .notes-grid-item .note-snippet {
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 400;
-    color: var(--ink);
-    line-height: 1.6;
+    color: var(--ink-dim);
+    line-height: 1.65;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
@@ -638,11 +629,11 @@
   }
 
   .notes-grid-item .note-time {
-    font-size: 10.5px;
+    font-size: 10px;
     color: var(--ink-ghost);
     margin-top: 12px;
     padding-top: 12px;
-    border-top: 1px solid rgba(255,255,255,0.05);
+    border-top: 1px solid var(--border);
   }
 
   .notes-empty {
@@ -650,97 +641,99 @@
     text-align: center;
     padding: 60px 20px;
     color: var(--ink-ghost);
-    font-size: 14px;
+    font-size: 13.5px;
   }
 
-  .notes-empty-icon {
-    font-size: 36px;
-    margin-bottom: 12px;
-    opacity: 0.3;
-  }
+  .notes-empty-icon { font-size: 32px; margin-bottom: 10px; opacity: 0.4; }
 
   /* ─── SEARCH ROW ─────────────────────────────── */
   .search-row {
     display: flex;
-    gap: 12px;
-    margin-bottom: 28px;
+    gap: 10px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
   }
 
-  .search-row input { flex: 1; }
+  .search-row input { flex: 1; min-width: 160px; }
 
   /* ─── CONFIRM DIALOG ─────────────────────────── */
   .overlay {
     position: fixed;
     inset: 0;
-    background: rgba(14,20,27,0.75);
+    background: rgba(0,0,0,0.75);
     display: none;
     align-items: center;
     justify-content: center;
     z-index: 100;
-    backdrop-filter: blur(6px);
+    backdrop-filter: blur(8px);
+    padding: 20px;
   }
 
   .overlay.show { display: flex; }
 
   .dialog {
-    background: var(--navy-mid);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 16px;
-    padding: 40px 44px;
-    max-width: 420px;
-    width: 90%;
+    background: var(--bg-3);
+    border: 1px solid var(--border-2);
+    border-radius: 14px;
+    padding: 36px 40px;
+    max-width: 400px;
+    width: 100%;
     text-align: center;
-    animation: dialogIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
-    box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+    animation: dialogIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.6);
   }
 
   @keyframes dialogIn {
-    from { opacity: 0; transform: scale(0.88) translateY(20px); }
+    from { opacity: 0; transform: scale(0.9) translateY(16px); }
     to   { opacity: 1; transform: scale(1) translateY(0); }
   }
 
   .dialog-icon {
-    width: 60px;
-    height: 60px;
-    background: rgba(192,57,43,0.12);
+    width: 52px;
+    height: 52px;
+    background: rgba(184,84,80,0.1);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 20px;
-    color: #E57373;
+    margin: 0 auto 16px;
+    color: #D47A78;
   }
 
-  .dialog-icon svg { width: 26px; height: 26px; }
+  .dialog-icon svg { width: 22px; height: 22px; }
 
   .dialog-title {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
     color: var(--ink);
-    margin-bottom: 10px;
+    margin-bottom: 8px;
+    font-family: 'Playfair Display', serif;
   }
 
   .dialog-message {
-    font-size: 13.5px;
+    font-size: 13px;
     font-weight: 400;
     color: var(--ink-dim);
     line-height: 1.65;
-    margin-bottom: 28px;
+    margin-bottom: 24px;
   }
 
-  .dialog-btns { display: flex; gap: 12px; justify-content: center; }
+  .dialog-btns { display: flex; gap: 10px; justify-content: center; }
   .dialog-btns .btn { flex: 1; }
 
   /* ─── SPINNER ────────────────────────────────── */
   .spinner {
-    width: 16px;
-    height: 16px;
-    border: 2px solid rgba(255,255,255,0.2);
-    border-top-color: #fff;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(0,0,0,0.2);
+    border-top-color: #0A0A0A;
     border-radius: 50%;
     animation: spin 0.7s linear infinite;
     display: none;
   }
+
+  .btn-primary .spinner { border: 2px solid rgba(0,0,0,0.2); border-top-color: #0A0A0A; }
+  .btn-ghost .spinner, .btn-danger .spinner { border: 2px solid rgba(255,255,255,0.1); border-top-color: var(--ink-dim); }
 
   .btn-loading .spinner { display: inline-block; }
   .btn-loading .btn-text { display: none; }
@@ -750,28 +743,29 @@
   /* ─── TOAST ──────────────────────────────────── */
   #toast {
     position: fixed;
-    bottom: 32px;
-    right: 32px;
-    background: var(--navy-mid);
-    border: 1px solid rgba(255,255,255,0.1);
+    bottom: 28px;
+    right: 28px;
+    background: var(--bg-3);
+    border: 1px solid var(--border-2);
     border-radius: var(--radius);
-    padding: 14px 20px;
-    font-size: 13px;
+    padding: 12px 18px;
+    font-size: 12.5px;
     font-weight: 500;
     color: var(--ink);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    box-shadow: 0 10px 36px rgba(0,0,0,0.4);
     z-index: 999;
-    transform: translateY(20px);
+    transform: translateY(16px);
     opacity: 0;
-    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+    transition: transform 0.28s cubic-bezier(0.4,0,0.2,1), opacity 0.28s ease;
     pointer-events: none;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+    max-width: calc(100vw - 56px);
   }
 
   #toast.show { transform: translateY(0); opacity: 1; }
-  #toast .toast-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  #toast .toast-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 
   /* ─── LOADING BAR ────────────────────────────── */
   #loading-bar {
@@ -779,30 +773,30 @@
     top: 0;
     left: 0;
     height: 2px;
-    background: var(--wine);
+    background: var(--accent);
     width: 0%;
     transition: width 0.3s ease;
     z-index: 9999;
-    box-shadow: 0 0 8px rgba(114,47,55,0.7);
+    box-shadow: 0 0 8px rgba(200,169,110,0.5);
   }
 
-  /* ─── NOTE ID BADGE (post-create) ───────────── */
+  /* ─── NOTE ID REVEAL ─────────────────────────── */
   .note-id-reveal {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    background: rgba(114,47,55,0.15);
-    border: 1px solid rgba(114,47,55,0.35);
+    gap: 8px;
+    background: var(--accent-dim);
+    border: 1px solid rgba(200,169,110,0.25);
     border-radius: var(--radius-sm);
-    padding: 10px 18px;
-    margin-top: 14px;
-    font-size: 16px;
+    padding: 9px 16px;
+    margin-top: 12px;
+    font-size: 15px;
     font-weight: 700;
-    color: var(--ink);
-    letter-spacing: 0.02em;
+    color: var(--accent);
+    letter-spacing: 0.01em;
   }
 
-  .note-id-reveal span { color: var(--ink-ghost); font-size: 11px; font-weight: 500; }
+  .note-id-reveal span { color: var(--ink-dim); font-size: 10.5px; font-weight: 500; }
 
   /* ─── DELETE ALL SCREEN ──────────────────────── */
   #screen-deleteall .screen-body {
@@ -812,70 +806,42 @@
   }
 
   .danger-zone {
-    background: rgba(192,57,43,0.06);
-    border: 1px solid rgba(192,57,43,0.2);
+    background: rgba(184,84,80,0.04);
+    border: 1px solid rgba(184,84,80,0.15);
     border-radius: var(--radius);
-    padding: 32px 36px;
-    max-width: 520px;
+    padding: 28px 32px;
+    max-width: 480px;
     width: 100%;
   }
 
   .danger-zone-label {
-    font-size: 9.5px;
+    font-size: 9px;
     font-weight: 700;
-    letter-spacing: 0.16em;
-    color: #E57373;
+    letter-spacing: 0.14em;
+    color: #D47A78;
     text-transform: uppercase;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
 
   .danger-zone-desc {
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 400;
     color: var(--ink-dim);
     line-height: 1.65;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
 
   /* ─── CHAR COUNTER ───────────────────────────── */
   .char-counter {
-    font-size: 11px;
+    font-size: 10.5px;
     color: var(--ink-ghost);
     text-align: right;
-    margin-top: 6px;
+    margin-top: 5px;
     transition: color 0.2s;
   }
-  .char-counter.warn { color: #E57373; }
+  .char-counter.warn { color: #D47A78; }
 
-  /* ─── RESPONSIVE ─────────────────────────────── */
-  @media (max-width: 768px) {
-    .shell { grid-template-columns: 1fr; }
-    .sidebar { display: none; }
-    .screen-header { padding: 32px 28px 24px; }
-    .screen-body { padding: 28px; }
-    .home-grid { grid-template-columns: 1fr 1fr; }
-    .form-row.cols-2 { grid-template-columns: 1fr; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-  }
-
-  /* ─── RIPPLE ─────────────────────────────────── */
-  .ripple {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.15);
-    transform: scale(0);
-    animation: rippleAnim 0.55s linear;
-    pointer-events: none;
-  }
-
-  @keyframes rippleAnim {
-    to { transform: scale(4); opacity: 0; }
-  }
-
-  /* ─── PULSE RING (success) ───────────────────── */
+  /* ─── PULSE RING ─────────────────────────────── */
   .pulse-ring {
     position: fixed;
     top: 50%;
@@ -883,16 +849,16 @@
     width: 120px;
     height: 120px;
     margin: -60px 0 0 -60px;
-    border: 3px solid var(--success);
+    border: 2px solid var(--success);
     border-radius: 50%;
-    animation: pulseRingAnim 0.7s ease-out forwards;
+    animation: pulseRingAnim 0.6s ease-out forwards;
     pointer-events: none;
     z-index: 9998;
     opacity: 0;
   }
 
   @keyframes pulseRingAnim {
-    0%   { transform: scale(0.5); opacity: 0.8; }
+    0%   { transform: scale(0.5); opacity: 0.7; }
     100% { transform: scale(2.5); opacity: 0; }
   }
 
@@ -904,8 +870,8 @@
   }
 
   .typing-dots span {
-    width: 5px;
-    height: 5px;
+    width: 4px;
+    height: 4px;
     border-radius: 50%;
     background: var(--ink-dim);
     animation: dotBounce 1.2s infinite ease-in-out;
@@ -918,6 +884,122 @@
     0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
     40%            { transform: scale(1); opacity: 1; }
   }
+
+  /* ─── MOBILE NAV ─────────────────────────────── */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-2);
+    border-top: 1px solid var(--border);
+    z-index: 50;
+    padding: 8px 0 env(safe-area-inset-bottom, 8px);
+  }
+
+  .mobile-nav-inner {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .mobile-nav-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: background 0.2s;
+    color: var(--ink-ghost);
+    border: none;
+    background: none;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .mobile-nav-btn svg { width: 18px; height: 18px; stroke: currentColor; }
+  .mobile-nav-btn span { font-size: 9px; font-weight: 500; }
+  .mobile-nav-btn.active { color: var(--accent); }
+
+  /* ─── RESPONSIVE ─────────────────────────────── */
+  @media (max-width: 900px) {
+    .home-grid { grid-template-columns: repeat(2, 1fr); max-width: 480px; }
+  }
+
+  @media (max-width: 768px) {
+    html, body { overflow: hidden; }
+
+    .shell {
+      grid-template-columns: 1fr;
+      height: 100vh;
+    }
+
+    .sidebar { display: none; }
+
+    .main {
+      padding-bottom: 70px;
+    }
+
+    .mobile-nav { display: block; }
+
+    .screen-header { padding: 24px 20px 20px; }
+    .screen-body { padding: 20px; }
+
+    #screen-home {
+      padding: 40px 20px 20px;
+      justify-content: flex-start;
+      overflow-y: auto;
+      min-height: calc(100vh - 70px);
+    }
+
+    .home-heading { font-size: 30px; }
+    .home-grid {
+      grid-template-columns: repeat(2, 1fr);
+      max-width: 100%;
+      gap: 10px;
+    }
+
+    .form-row.cols-2 { grid-template-columns: 1fr; }
+
+    .search-row { flex-direction: column; }
+    .search-row .btn { width: 100%; }
+
+    .btn-row { flex-direction: column; }
+    .btn-row .btn { width: 100%; justify-content: center; }
+
+    .danger-zone { padding: 20px; }
+
+    .notes-grid { grid-template-columns: 1fr; }
+
+    #toast { bottom: 82px; right: 16px; left: 16px; max-width: none; }
+
+    .screen-title { font-size: 22px; }
+  }
+
+  @media (max-width: 400px) {
+    .home-grid { grid-template-columns: 1fr; }
+    .home-card { padding: 16px 14px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+
+  /* ─── RIPPLE ─────────────────────────────────── */
+  .ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    transform: scale(0);
+    animation: rippleAnim 0.5s linear;
+    pointer-events: none;
+  }
+
+  @keyframes rippleAnim { to { transform: scale(4); opacity: 0; } }
 </style>
 </head>
 <body>
@@ -954,14 +1036,14 @@
   <aside class="sidebar">
     <div class="brand">
       <div class="brand-mark">
-        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8" style="fill:none;stroke:#F0EBE3;stroke-width:2"/><line x1="16" y1="13" x2="8" y2="13" style="stroke:#F0EBE3;stroke-width:2"/><line x1="16" y1="17" x2="8" y2="17" style="stroke:#F0EBE3;stroke-width:2"/><line x1="10" y1="9" x2="8" y2="9" style="stroke:#F0EBE3;stroke-width:2"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8" style="fill:none;stroke:#0A0A0A;stroke-width:2"/><line x1="16" y1="13" x2="8" y2="13" style="stroke:#0A0A0A;stroke-width:2"/><line x1="16" y1="17" x2="8" y2="17" style="stroke:#0A0A0A;stroke-width:2"/><line x1="10" y1="9" x2="8" y2="9" style="stroke:#0A0A0A;stroke-width:2"/></svg>
       </div>
       <div class="brand-name">List It Up</div>
       <div class="brand-tagline">Your thoughts, kept.</div>
     </div>
 
     <nav class="nav">
-      <div class="nav-section-label" style="margin-bottom:14px;">Operations</div>
+      <div class="nav-section-label" style="margin-bottom:12px;">Operations</div>
 
       <div class="nav-item active" onclick="navigate('home')" id="nav-home">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
@@ -1007,7 +1089,8 @@
     </nav>
 
     <div class="sidebar-footer">
-      Built for<br/>people who<br/>think in words.
+      <strong>Developed By Maneev Arora 👑</strong><br/>
+      Built for people who<br/>think in words.
     </div>
   </aside>
 
@@ -1019,49 +1102,49 @@
       <div class="home-bg-orb"></div>
       <div class="home-eyebrow">List It Up &nbsp;/&nbsp; Notes</div>
       <h1 class="home-heading">Every thought<br/><em>deserves a place.</em></h1>
-      <p class="home-sub">A minimal, precise workspace for capturing what matters. Choose an operation to begin.</p>
+      <p class="home-sub">A minimal workspace for capturing what matters. Choose an operation to begin.</p>
       <div class="home-grid">
         <div class="home-card" onclick="navigate('create')">
           <div class="home-card-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           </div>
           <div class="home-card-title">Create</div>
-          <div class="home-card-desc">Write a new note and save it to your account.</div>
+          <div class="home-card-desc">Write a new note and save it.</div>
         </div>
         <div class="home-card" onclick="navigate('read')">
           <div class="home-card-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
           </div>
           <div class="home-card-title">Read</div>
-          <div class="home-card-desc">Retrieve a note instantly by its ID.</div>
+          <div class="home-card-desc">Retrieve a note by its ID.</div>
         </div>
         <div class="home-card" onclick="navigate('update')">
           <div class="home-card-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           </div>
           <div class="home-card-title">Update</div>
-          <div class="home-card-desc">Edit the content of any existing note.</div>
+          <div class="home-card-desc">Edit any existing note.</div>
         </div>
         <div class="home-card" onclick="navigate('delete')">
           <div class="home-card-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3,6 5,6 21,6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3,6 5,6 21,6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
           </div>
           <div class="home-card-title">Delete</div>
-          <div class="home-card-desc">Remove a specific note permanently.</div>
+          <div class="home-card-desc">Remove a specific note.</div>
         </div>
         <div class="home-card" onclick="navigate('all')">
           <div class="home-card-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
           </div>
           <div class="home-card-title">All Notes</div>
-          <div class="home-card-desc">Browse the full collection for any user.</div>
+          <div class="home-card-desc">Browse the full collection.</div>
         </div>
         <div class="home-card" onclick="navigate('deleteall')">
           <div class="home-card-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
           </div>
           <div class="home-card-title">Clear All</div>
-          <div class="home-card-desc">Wipe all notes for a user at once.</div>
+          <div class="home-card-desc">Wipe all notes for a user.</div>
         </div>
       </div>
     </div>
@@ -1069,9 +1152,13 @@
     <!-- CREATE -->
     <div class="screen" id="screen-create">
       <div class="screen-header">
+        <button class="back-btn" onclick="navigate('home')">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15,18 9,12 15,6"/></svg>
+          Back to Home
+        </button>
         <div class="screen-header-eyebrow">New Entry</div>
         <h2 class="screen-title">Create a Note</h2>
-        <p class="screen-subtitle">Set your user details and write your note below. Your note ID will be generated automatically.</p>
+        <p class="screen-subtitle">Set your user details and write your note. The ID is generated automatically.</p>
       </div>
       <div class="screen-body">
         <div class="form-row cols-2">
@@ -1105,6 +1192,10 @@
     <!-- READ -->
     <div class="screen" id="screen-read">
       <div class="screen-header">
+        <button class="back-btn" onclick="navigate('home')">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15,18 9,12 15,6"/></svg>
+          Back to Home
+        </button>
         <div class="screen-header-eyebrow">Retrieve</div>
         <h2 class="screen-title">Read a Note</h2>
         <p class="screen-subtitle">Enter the Note ID to retrieve its content.</p>
@@ -1124,9 +1215,13 @@
     <!-- UPDATE -->
     <div class="screen" id="screen-update">
       <div class="screen-header">
+        <button class="back-btn" onclick="navigate('home')">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15,18 9,12 15,6"/></svg>
+          Back to Home
+        </button>
         <div class="screen-header-eyebrow">Edit</div>
         <h2 class="screen-title">Update a Note</h2>
-        <p class="screen-subtitle">Enter the Note ID and provide the revised content. The timestamp will refresh automatically.</p>
+        <p class="screen-subtitle">Enter the Note ID and provide the revised content.</p>
       </div>
       <div class="screen-body">
         <div class="form-row">
@@ -1156,6 +1251,10 @@
     <!-- DELETE -->
     <div class="screen" id="screen-delete">
       <div class="screen-header">
+        <button class="back-btn" onclick="navigate('home')">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15,18 9,12 15,6"/></svg>
+          Back to Home
+        </button>
         <div class="screen-header-eyebrow">Remove</div>
         <h2 class="screen-title">Delete a Note</h2>
         <p class="screen-subtitle">Enter the Note ID you want to permanently remove.</p>
@@ -1175,6 +1274,10 @@
     <!-- ALL NOTES -->
     <div class="screen" id="screen-all">
       <div class="screen-header">
+        <button class="back-btn" onclick="navigate('home')">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15,18 9,12 15,6"/></svg>
+          Back to Home
+        </button>
         <div class="screen-header-eyebrow">Collection</div>
         <h2 class="screen-title">All Notes</h2>
         <p class="screen-subtitle">Enter a username to view their entire note library.</p>
@@ -1194,6 +1297,10 @@
     <!-- DELETE ALL -->
     <div class="screen" id="screen-deleteall">
       <div class="screen-header">
+        <button class="back-btn" onclick="navigate('home')">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15,18 9,12 15,6"/></svg>
+          Back to Home
+        </button>
         <div class="screen-header-eyebrow">Danger Zone</div>
         <h2 class="screen-title">Delete All Notes</h2>
         <p class="screen-subtitle">This permanently removes every note tied to a User ID. Proceed carefully.</p>
@@ -1201,8 +1308,8 @@
       <div class="screen-body">
         <div class="danger-zone">
           <div class="danger-zone-label">Irreversible Action</div>
-          <div class="danger-zone-desc">Enter the User ID below. All notes belonging to this user will be permanently deleted. This cannot be undone.</div>
-          <div class="field" style="margin-bottom:20px;">
+          <div class="danger-zone-desc">Enter the User ID below. All notes belonging to this user will be permanently deleted.</div>
+          <div class="field" style="margin-bottom:18px;">
             <label for="da-userId">User ID</label>
             <input type="number" id="da-userId" placeholder="e.g. 1001" min="1" onkeydown="if(event.key==='Enter') handleDeleteAll()" />
           </div>
@@ -1211,16 +1318,42 @@
             <span class="spinner"></span>
           </button>
         </div>
-        <div class="result-box" id="deleteall-result" style="margin-top:24px; max-width:520px;"></div>
+        <div class="result-box" id="deleteall-result" style="margin-top:20px; max-width:480px;"></div>
       </div>
     </div>
 
   </main>
 </div>
 
+<!-- MOBILE NAV -->
+<nav class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <button class="mobile-nav-btn active" id="mnav-home" onclick="navigate('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="mobile-nav-btn" id="mnav-create" onclick="navigate('create')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <span>Create</span>
+    </button>
+    <button class="mobile-nav-btn" id="mnav-all" onclick="navigate('all')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      <span>All</span>
+    </button>
+    <button class="mobile-nav-btn" id="mnav-read" onclick="navigate('read')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      <span>Read</span>
+    </button>
+    <button class="mobile-nav-btn" id="mnav-delete" onclick="navigate('delete')">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,6 5,6 21,6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
+      <span>Delete</span>
+    </button>
+  </div>
+</nav>
+
 <script>
 /* ══════════════════════════════════════════
-   AUDIO ENGINE (Web Audio API)
+   AUDIO ENGINE
 ══════════════════════════════════════════ */
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
 let ctx;
@@ -1246,41 +1379,17 @@ function playTone(freq, type, duration, vol = 0.15, delay = 0) {
   } catch(e) {}
 }
 
-function soundClick() {
-  playTone(520, 'sine', 0.08, 0.1);
-}
-
-function soundSuccess() {
-  playTone(440, 'sine', 0.15, 0.12);
-  playTone(554, 'sine', 0.15, 0.1, 0.12);
-  playTone(660, 'sine', 0.2, 0.12, 0.24);
-}
-
-function soundError() {
-  playTone(260, 'sawtooth', 0.15, 0.08);
-  playTone(220, 'sawtooth', 0.2, 0.08, 0.15);
-}
-
-function soundDelete() {
-  playTone(330, 'triangle', 0.1, 0.1);
-  playTone(200, 'triangle', 0.2, 0.1, 0.12);
-}
-
-function soundNav() {
-  playTone(480, 'sine', 0.07, 0.08);
-}
-
-function soundFetch() {
-  playTone(600, 'sine', 0.06, 0.08);
-  playTone(700, 'sine', 0.06, 0.08, 0.08);
-}
+function soundClick()   { playTone(520, 'sine', 0.08, 0.1); }
+function soundSuccess() { playTone(440,'sine',0.15,0.12); playTone(554,'sine',0.15,0.1,0.12); playTone(660,'sine',0.2,0.12,0.24); }
+function soundError()   { playTone(260,'sawtooth',0.15,0.08); playTone(220,'sawtooth',0.2,0.08,0.15); }
+function soundDelete()  { playTone(330,'triangle',0.1,0.1); playTone(200,'triangle',0.2,0.1,0.12); }
+function soundNav()     { playTone(480,'sine',0.07,0.08); }
+function soundFetch()   { playTone(600,'sine',0.06,0.08); playTone(700,'sine',0.06,0.08,0.08); }
 
 /* ══════════════════════════════════════════
    HAPTICS
 ══════════════════════════════════════════ */
-function vibrate(pattern) {
-  if (navigator.vibrate) navigator.vibrate(pattern);
-}
+function vibrate(pattern) { if (navigator.vibrate) navigator.vibrate(pattern); }
 
 /* ══════════════════════════════════════════
    NAVIGATION
@@ -1293,15 +1402,18 @@ function navigate(screen) {
 
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.remove('active'));
 
   const target = document.getElementById('screen-' + screen);
   const navTarget = document.getElementById('nav-' + screen);
+  const mnavTarget = document.getElementById('mnav-' + screen);
 
   if (target) {
     target.classList.add('active');
     document.getElementById('main').scrollTo({ top: 0, behavior: 'smooth' });
   }
   if (navTarget) navTarget.classList.add('active');
+  if (mnavTarget) mnavTarget.classList.add('active');
 
   currentScreen = screen;
 }
@@ -1332,7 +1444,7 @@ function showToast(msg, type = 'success') {
   const toast = document.getElementById('toast');
   const dot = document.getElementById('toast-dot');
   document.getElementById('toast-msg').textContent = msg;
-  dot.style.background = type === 'success' ? '#7ECBA9' : '#E88080';
+  dot.style.background = type === 'success' ? '#4A9B6F' : '#D47A78';
   toast.classList.add('show');
   toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
 }
@@ -1366,7 +1478,7 @@ function spawnPulse() {
   const el = document.createElement('div');
   el.className = 'pulse-ring';
   document.body.appendChild(el);
-  setTimeout(() => el.remove(), 800);
+  setTimeout(() => el.remove(), 700);
 }
 
 /* ══════════════════════════════════════════
@@ -1381,7 +1493,7 @@ document.addEventListener('click', (e) => {
   const size = Math.max(rect.width, rect.height);
   r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - rect.left - size/2}px;top:${e.clientY - rect.top - size/2}px`;
   btn.appendChild(r);
-  setTimeout(() => r.remove(), 600);
+  setTimeout(() => r.remove(), 550);
 });
 
 /* ══════════════════════════════════════════
@@ -1398,8 +1510,7 @@ function updateCounter(el, counterId, max) {
    CLEAR FORMS
 ══════════════════════════════════════════ */
 function clearForm(screen) {
-  soundClick();
-  vibrate(15);
+  soundClick(); vibrate(15);
   if (screen === 'create') {
     document.getElementById('c-userId').value = '';
     document.getElementById('c-userName').value = '';
@@ -1412,6 +1523,21 @@ function clearForm(screen) {
     document.getElementById('u-counter').textContent = '0 / 2000';
     document.getElementById('update-result').className = 'result-box';
   }
+}
+
+/* ══════════════════════════════════════════
+   TIMESTAMP — uses local time correctly
+══════════════════════════════════════════ */
+function getLocalTimestamp() {
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const day   = pad(now.getDate());
+  const month = pad(now.getMonth() + 1);
+  const year  = now.getFullYear();
+  const hours = pad(now.getHours());
+  const mins  = pad(now.getMinutes());
+  const secs  = pad(now.getSeconds());
+  return `${day}/${month}/${year}, ${hours}:${mins}:${secs}`;
 }
 
 /* ══════════════════════════════════════════
@@ -1428,9 +1554,9 @@ async function api(method, url, body = null) {
    CREATE
 ══════════════════════════════════════════ */
 async function handleCreate() {
-  const userId = document.getElementById('c-userId').value.trim();
+  const userId   = document.getElementById('c-userId').value.trim();
   const userName = document.getElementById('c-userName').value.trim();
-  const notes = document.getElementById('c-notes').value.trim();
+  const notes    = document.getElementById('c-notes').value.trim();
 
   if (!userId || !userName || !notes) {
     soundError(); vibrate([30,20,30]);
@@ -1442,19 +1568,24 @@ async function handleCreate() {
   setLoading('btn-create', true);
   loadingStart();
 
-  const data = await api('POST', '/api/create', { userId: parseInt(userId), userName, notes });
+  // Pass client-side local timestamp to backend so it stores the right time
+  const data = await api('POST', '/api/create', {
+    userId: parseInt(userId), userName, notes,
+    clientTimestamp: getLocalTimestamp()
+  });
   loadingEnd();
   setLoading('btn-create', false);
 
   if (data.success) {
-    soundSuccess(); vibrate([30, 50, 30]); spawnPulse();
+    soundSuccess(); vibrate([30,50,30]); spawnPulse();
+    const ts = data.timestamp || getLocalTimestamp();
     showResult('create-result', 'success', 'Note Saved',
       data.message,
-      `<div class="note-id-reveal"><span>Your Note ID</span>&nbsp; #${data.notesId}</div><br/>Created at: ${data.timestamp}`
+      `<div class="note-id-reveal"><span>Your Note ID</span>&nbsp; #${data.notesId}</div><br/>Created at: ${ts}`
     );
     showToast('Note created — ID #' + data.notesId);
   } else {
-    soundError(); vibrate([50, 30, 50]);
+    soundError(); vibrate([50,30,50]);
     showResult('create-result', 'error', 'Error', data.message);
   }
 }
@@ -1469,7 +1600,7 @@ async function handleRead() {
   soundFetch(); vibrate(20);
   setLoading('btn-read', true);
   loadingStart();
-  document.getElementById('read-result').innerHTML = `<div style="padding:20px 0; color:var(--ink-ghost); display:flex; align-items:center; gap:10px; font-size:13px;">
+  document.getElementById('read-result').innerHTML = `<div style="padding:20px 0; color:var(--ink-dim); display:flex; align-items:center; gap:10px; font-size:13px;">
     <div class="typing-dots"><span></span><span></span><span></span></div> Fetching note…
   </div>`;
 
@@ -1478,24 +1609,24 @@ async function handleRead() {
   setLoading('btn-read', false);
 
   if (data.success) {
-    soundSuccess(); vibrate([20, 30, 20]);
+    soundSuccess(); vibrate([20,30,20]);
     const n = data.note;
     document.getElementById('read-result').innerHTML = `
       <div class="note-card">
         <div class="note-card-header">
           <div class="note-card-meta">
             <div class="note-card-id">Note #${n.id}</div>
-            <div class="note-card-author">${n.author}</div>
+            <div class="note-card-author">${escapeHtml(n.author)}</div>
             <div class="note-card-time">${n.timestamp}</div>
           </div>
           <div class="note-card-actions">
-            <button class="btn btn-ghost" style="padding:8px 14px;font-size:12px;" onclick="copyNote('${n.content.replace(/'/g, "\\'")}')">Copy</button>
+            <button class="btn btn-ghost" style="padding:7px 12px;font-size:11.5px;" onclick="copyNote('${n.content.replace(/'/g, "\\'")}')">Copy</button>
           </div>
         </div>
         <div class="note-card-body">${escapeHtml(n.content)}</div>
       </div>`;
   } else {
-    soundError(); vibrate([40, 20, 40]);
+    soundError(); vibrate([40,20,40]);
     document.getElementById('read-result').innerHTML = `<div class="result-box show error"><div class="result-box-label">Not Found</div><div class="result-box-message">${data.message}</div></div>`;
   }
 }
@@ -1505,23 +1636,23 @@ async function handleRead() {
 ══════════════════════════════════════════ */
 async function handleUpdate() {
   const noteId = document.getElementById('u-noteId').value.trim();
-  const notes = document.getElementById('u-notes').value.trim();
+  const notes  = document.getElementById('u-notes').value.trim();
   if (!noteId || !notes) { soundError(); vibrate([30,20,30]); showResult('update-result','error','Validation','Both fields are required.'); return; }
 
   soundClick(); vibrate(20);
   setLoading('btn-update', true);
   loadingStart();
 
-  const data = await api('PUT', '/api/update/' + noteId, { notes });
+  const data = await api('PUT', '/api/update/' + noteId, { notes, clientTimestamp: getLocalTimestamp() });
   loadingEnd();
   setLoading('btn-update', false);
 
   if (data.success) {
-    soundSuccess(); vibrate([20, 40, 20]); spawnPulse();
-    showResult('update-result', 'success', 'Updated', data.message, 'Last edited: ' + data.timestamp);
+    soundSuccess(); vibrate([20,40,20]); spawnPulse();
+    showResult('update-result', 'success', 'Updated', data.message, 'Last edited: ' + (data.timestamp || getLocalTimestamp()));
     showToast('Note #' + noteId + ' updated.');
   } else {
-    soundError(); vibrate([40, 20, 40]);
+    soundError(); vibrate([40,20,40]);
     showResult('update-result', 'error', 'Error', data.message);
   }
 }
@@ -1543,12 +1674,12 @@ function handleDelete() {
       loadingEnd();
       setLoading('btn-delete', false);
       if (data.success) {
-        soundSuccess(); vibrate([20, 40, 20]);
+        soundSuccess(); vibrate([20,40,20]);
         showResult('delete-result', 'success', 'Deleted', data.message);
-        showToast('Note #' + noteId + ' deleted.', 'success');
+        showToast('Note #' + noteId + ' deleted.');
         document.getElementById('d-noteId').value = '';
       } else {
-        soundError(); vibrate([50, 30, 50]);
+        soundError(); vibrate([50,30,50]);
         showResult('delete-result', 'error', 'Error', data.message);
       }
     }
@@ -1565,7 +1696,7 @@ async function handleAll() {
   soundFetch(); vibrate(20);
   setLoading('btn-all', true);
   loadingStart();
-  document.getElementById('all-result').innerHTML = `<div style="padding:20px 0; color:var(--ink-ghost); display:flex; align-items:center; gap:10px; font-size:13px;">
+  document.getElementById('all-result').innerHTML = `<div style="padding:20px 0; color:var(--ink-dim); display:flex; align-items:center; gap:10px; font-size:13px;">
     <div class="typing-dots"><span></span><span></span><span></span></div> Loading notes for ${escapeHtml(userName)}…
   </div>`;
 
@@ -1574,7 +1705,7 @@ async function handleAll() {
   setLoading('btn-all', false);
 
   if (data.success) {
-    soundSuccess(); vibrate([20, 30, 20]);
+    soundSuccess(); vibrate([20,30,20]);
     const notes = data.notes;
     if (notes.length === 0) {
       document.getElementById('all-result').innerHTML = `
@@ -1584,7 +1715,7 @@ async function handleAll() {
         </div></div>`;
     } else {
       document.getElementById('all-result').innerHTML = `
-        <div style="font-size:12px;font-weight:600;color:var(--ink-ghost);margin-bottom:18px;letter-spacing:0.06em;">${notes.length} note${notes.length > 1 ? 's' : ''} &nbsp;—&nbsp; ${escapeHtml(data.userName)}</div>
+        <div style="font-size:11.5px;font-weight:600;color:var(--ink-ghost);margin-bottom:16px;letter-spacing:0.04em;">${notes.length} note${notes.length > 1 ? 's' : ''} &nbsp;—&nbsp; ${escapeHtml(data.userName)}</div>
         <div class="notes-grid">
           ${notes.map((n, i) => `
             <div class="notes-grid-item" style="--i:${i}" onclick="quickRead(${n.id})">
@@ -1596,7 +1727,7 @@ async function handleAll() {
         </div>`;
     }
   } else {
-    soundError(); vibrate([40, 20, 40]);
+    soundError(); vibrate([40,20,40]);
     document.getElementById('all-result').innerHTML = `<div class="result-box show error"><div class="result-box-label">Error</div><div class="result-box-message">${data.message}</div></div>`;
   }
 }
@@ -1620,19 +1751,19 @@ function handleDeleteAll() {
     'Delete all notes?',
     `Every note for User ID ${userId} will be permanently wiped. This cannot be undone.`,
     async () => {
-      soundDelete(); vibrate([50, 30, 50, 30, 50]);
+      soundDelete(); vibrate([50,30,50,30,50]);
       setLoading('btn-deleteall', true);
       loadingStart();
       const data = await api('DELETE', '/api/deleteall/' + userId);
       loadingEnd();
       setLoading('btn-deleteall', false);
       if (data.success) {
-        soundSuccess(); vibrate([30, 40, 30]);
+        soundSuccess(); vibrate([30,40,30]);
         showResult('deleteall-result', 'success', 'All Cleared', data.message);
-        showToast(`${data.count} notes deleted.`, 'success');
+        showToast(`${data.count} notes deleted.`);
         document.getElementById('da-userId').value = '';
       } else {
-        soundError(); vibrate([50, 30, 50]);
+        soundError(); vibrate([50,30,50]);
         showResult('deleteall-result', 'error', 'Error', data.message);
       }
     }
@@ -1667,7 +1798,7 @@ document.getElementById('overlay').addEventListener('click', (e) => {
 ══════════════════════════════════════════ */
 function copyNote(content) {
   navigator.clipboard.writeText(content).then(() => {
-    soundSuccess(); vibrate([15, 10, 15]);
+    soundSuccess(); vibrate([15,10,15]);
     showToast('Copied to clipboard.');
   });
 }
