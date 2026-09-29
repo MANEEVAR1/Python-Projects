@@ -3169,41 +3169,32 @@ async function handleCreate() {
 ══════════════════════════════════════════ */
 
 async function handleRead() {
-  const noteId =
-    document.getElementById(
-      'r-noteId'
-    ).value.trim();
+  const noteId = document
+    .getElementById('r-noteId')
+    .value
+    .trim();
 
-  if (
-    !/^\d+$/.test(noteId) ||
-    Number(noteId) <= 0
-  ) {
+  if (!/^\d+$/.test(noteId) || Number(noteId) <= 0) {
     soundError();
-
     showResult(
       'read-result',
       'error',
       'Validation',
       'Enter a valid Note ID.'
     );
-
     return;
   }
 
   soundFetch();
   vibrate(20);
 
-  setLoading(
-    'btn-read',
-    true
-  );
-
+  setLoading('btn-read', true);
   loadingStart();
 
-  const result =
-    document.getElementById(
-      'read-result'
-    );
+  const result = document.getElementById('read-result');
+
+  // Make result container visible immediately
+  result.className = 'result-box show';
 
   result.innerHTML = `
     <div
@@ -3227,19 +3218,18 @@ async function handleRead() {
   `;
 
   try {
-    const data =
-      await api(
-        'GET',
-        '/api/read/' +
-        encodeURIComponent(noteId)
-      );
+    const data = await api(
+      'GET',
+      '/api/read/' + encodeURIComponent(noteId)
+    );
 
-    if (data.success) {
+    if (data.success === true && data.note) {
       soundSuccess();
-      vibrate([20,30,20]);
+      vibrate([20, 30, 20]);
 
-      const n =
-        data.note;
+      const n = data.note;
+
+      result.className = 'result-box show';
 
       result.innerHTML = `
         <div class="note-card">
@@ -3249,23 +3239,23 @@ async function handleRead() {
             <div class="note-card-meta">
 
               <div class="note-card-id">
-                Note #${escapeHtml(n.id)}
+                Note #${escapeHtml(String(n.id))}
               </div>
 
               <div class="note-card-author">
-                ${escapeHtml(n.author)}
+                ${escapeHtml(String(n.author))}
               </div>
 
             </div>
 
             <div class="note-card-time">
-              ${escapeHtml(n.timestamp)}
+              ${escapeHtml(String(n.timestamp))}
             </div>
 
           </div>
 
           <div class="note-card-body">
-            ${escapeHtml(n.content)}
+            ${escapeHtml(String(n.content))}
           </div>
 
           <div class="note-card-actions">
@@ -3288,30 +3278,43 @@ async function handleRead() {
 
     } else {
       soundError();
-      vibrate([40,20,40]);
+      vibrate([40, 20, 40]);
+
+      result.className = 'result-box show error';
 
       result.innerHTML = `
-        <div class="result-box show error">
+        <div class="result-box-label">
+          Not Found
+        </div>
 
-          <div class="result-box-label">
-            Not Found
-          </div>
-
-          <div class="result-box-message">
-            ${escapeHtml(data.message)}
-          </div>
-
+        <div class="result-box-message">
+          ${escapeHtml(
+            data.message || 'Note could not be found.'
+          )}
         </div>
       `;
     }
 
+  } catch (error) {
+    console.error('Read request failed:', error);
+
+    soundError();
+
+    result.className = 'result-box show error';
+
+    result.innerHTML = `
+      <div class="result-box-label">
+        Error
+      </div>
+
+      <div class="result-box-message">
+        Unable to read the note. Please try again.
+      </div>
+    `;
+
   } finally {
     loadingEnd();
-
-    setLoading(
-      'btn-read',
-      false
-    );
+    setLoading('btn-read', false);
   }
 }
 
@@ -3531,10 +3534,10 @@ function handleDelete() {
 ══════════════════════════════════════════ */
 
 async function handleAll() {
-  const userName =
-    document.getElementById(
-      'a-userName'
-    ).value.trim();
+  const userName = document
+    .getElementById('a-userName')
+    .value
+    .trim();
 
   if (!userName) {
     soundError();
@@ -3552,17 +3555,13 @@ async function handleAll() {
   soundFetch();
   vibrate(20);
 
-  setLoading(
-    'btn-all',
-    true
-  );
-
+  setLoading('btn-all', true);
   loadingStart();
 
-  const result =
-    document.getElementById(
-      'all-result'
-    );
+  const result = document.getElementById('all-result');
+
+  // Make result container visible
+  result.className = 'result-box show';
 
   result.innerHTML = `
     <div
@@ -3587,21 +3586,21 @@ async function handleAll() {
   `;
 
   try {
-    const data =
-      await api(
-        'GET',
-        '/api/notes/' +
-        encodeURIComponent(userName)
-      );
+    const data = await api(
+      'GET',
+      '/api/notes/' +
+      encodeURIComponent(userName)
+    );
 
-    if (data.success) {
+    if (data.success === true) {
       soundSuccess();
-      vibrate([20,30,20]);
+      vibrate([20, 30, 20]);
 
-      const notes =
-        Array.isArray(data.notes)
-          ? data.notes
-          : [];
+      const notes = Array.isArray(data.notes)
+        ? data.notes
+        : [];
+
+      result.className = 'result-box show';
 
       if (notes.length === 0) {
 
@@ -3639,7 +3638,7 @@ async function handleAll() {
             ${notes.length}
             note${notes.length > 1 ? 's' : ''}
             &nbsp;—&nbsp;
-            ${escapeHtml(data.userName)}
+            ${escapeHtml(data.userName || userName)}
           </div>
 
           <div class="notes-grid">
@@ -3652,15 +3651,15 @@ async function handleAll() {
               >
 
                 <div class="id-badge">
-                  # ${escapeHtml(n.id)}
+                  # ${escapeHtml(String(n.id))}
                 </div>
 
                 <div class="note-snippet">
-                  ${escapeHtml(n.content)}
+                  ${escapeHtml(String(n.content))}
                 </div>
 
                 <div class="note-time">
-                  ${escapeHtml(n.timestamp)}
+                  ${escapeHtml(String(n.timestamp))}
                 </div>
 
               </div>
@@ -3672,30 +3671,43 @@ async function handleAll() {
 
     } else {
       soundError();
-      vibrate([40,20,40]);
+      vibrate([40, 20, 40]);
+
+      result.className = 'result-box show error';
 
       result.innerHTML = `
-        <div class="result-box show error">
+        <div class="result-box-label">
+          Error
+        </div>
 
-          <div class="result-box-label">
-            Error
-          </div>
-
-          <div class="result-box-message">
-            ${escapeHtml(data.message)}
-          </div>
-
+        <div class="result-box-message">
+          ${escapeHtml(
+            data.message || 'Unable to load notes.'
+          )}
         </div>
       `;
     }
 
+  } catch (error) {
+    console.error('All notes request failed:', error);
+
+    soundError();
+
+    result.className = 'result-box show error';
+
+    result.innerHTML = `
+      <div class="result-box-label">
+        Error
+      </div>
+
+      <div class="result-box-message">
+        Unable to load notes. Please try again.
+      </div>
+    `;
+
   } finally {
     loadingEnd();
-
-    setLoading(
-      'btn-all',
-      false
-    );
+    setLoading('btn-all', false);
   }
 }
 
