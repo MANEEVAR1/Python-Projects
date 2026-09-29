@@ -1190,26 +1190,25 @@
 
   /* ─── UNIVERSAL BYLINE ───────────────────────── */
   #byline {
-    position: fixed;
-    left: 240px;
-    right: 0;
-    bottom: 18px;
-    min-height: 22px;
-    padding: 0 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    color: var(--accent);
-    z-index: 200;
-    pointer-events: none;
-    opacity: 0.85;
-    font-family: 'Playfair Display', serif;
-    text-align: center;
-  }
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 18px;
+  min-height: 22px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  pointer-events: none;
+  opacity: 0.85;
+  font-family: 'Playfair Display', serif;
+  text-align: center;
+}
 
   #byline a {
     text-decoration: none;
@@ -1226,7 +1225,7 @@
     #byline {
       left: 0;
       right: 0;
-      bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+      bottom: 18px;
       font-size: 10px;
       padding: 0 12px;
     }
@@ -1236,16 +1235,6 @@
 <body>
 
 <div id="loading-bar"></div>
-
-<div id="byline">
-  <span>Developed By</span>
-  <a
-    href="https://www.linkedin.com/in/maneev-arora"
-    target="_blank"
-    rel="noopener noreferrer"
-  >Maneev Arora</a>
-  <span>👑</span>
-</div>
 
 <!-- CONFIRM DIALOG -->
 <div class="overlay" id="overlay">
@@ -2277,7 +2266,15 @@
       </div>
 
     </div>
-
+<div id="byline">
+  <span>Developed By</span>
+  <a
+    href="https://www.linkedin.com/in/maneev-arora"
+    target="_blank"
+    rel="noopener noreferrer"
+  >Maneev Arora</a>
+  <span>👑</span>
+</div>
   </main>
 
 </div>
