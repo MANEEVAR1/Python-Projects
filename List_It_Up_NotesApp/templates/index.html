@@ -1,0 +1,1695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>List It Up</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&display=swap" rel="stylesheet" />
+<style>
+  /* ─── TOKENS ─────────────────────────────────── */
+  :root {
+    --navy:       #2C3E50;
+    --navy-deep:  #1A252F;
+    --navy-mid:   #243342;
+    --navy-light: #354D63;
+    --wine:       #722F37;
+    --wine-light: #8B3A44;
+    --wine-muted: #4A1E23;
+    --ink:        #F0EBE3;
+    --ink-dim:    #A8B4BE;
+    --ink-ghost:  #4F6070;
+    --success:    #3D7A5E;
+    --error:      #C0392B;
+    --radius:     12px;
+    --radius-sm:  6px;
+    --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    font-family: 'Raleway', sans-serif;
+    background: var(--navy-deep);
+    color: var(--ink);
+    overflow: hidden;
+  }
+
+  /* ─── LAYOUT ─────────────────────────────────── */
+  .shell {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    height: 100vh;
+    position: relative;
+  }
+
+  /* ─── SIDEBAR ────────────────────────────────── */
+  .sidebar {
+    background: var(--navy-deep);
+    border-right: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    flex-direction: column;
+    padding: 40px 0 32px;
+    position: relative;
+    z-index: 10;
+  }
+
+  .brand {
+    padding: 0 28px 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: 32px;
+  }
+
+  .brand-mark {
+    width: 36px;
+    height: 36px;
+    background: var(--wine);
+    border-radius: 8px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .brand-mark svg { width: 18px; height: 18px; fill: var(--ink); }
+
+  .brand-name {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .brand-tagline {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--ink-ghost);
+    margin-top: 5px;
+    letter-spacing: 0.06em;
+  }
+
+  .nav { flex: 1; padding: 0 16px; }
+
+  .nav-section-label {
+    font-size: 9.5px;
+    font-weight: 600;
+    color: var(--ink-ghost);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0 12px;
+    margin-bottom: 8px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--ink-dim);
+    transition: background var(--transition), color var(--transition), transform 0.15s ease;
+    margin-bottom: 2px;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nav-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--wine);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: var(--radius-sm);
+  }
+
+  .nav-item:hover { color: var(--ink); transform: translateX(2px); }
+  .nav-item:hover::before { opacity: 0.12; }
+
+  .nav-item.active {
+    color: var(--ink);
+    background: rgba(114, 47, 55, 0.18);
+  }
+  .nav-item.active::before { opacity: 0; }
+
+  .nav-item.active .nav-icon { color: var(--wine-light); }
+
+  .nav-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .nav-label { position: relative; z-index: 1; }
+
+  .nav-item .nav-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--wine-light);
+    margin-left: auto;
+    opacity: 0;
+    transition: opacity 0.3s;
+    position: relative;
+    z-index: 1;
+  }
+
+  .nav-item.active .nav-dot { opacity: 1; }
+
+  .sidebar-footer {
+    padding: 20px 28px 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    font-size: 11px;
+    color: var(--ink-ghost);
+    line-height: 1.7;
+  }
+
+  /* ─── MAIN ───────────────────────────────────── */
+  .main {
+    background: var(--navy);
+    overflow-y: auto;
+    position: relative;
+    scroll-behavior: smooth;
+  }
+
+  .main::-webkit-scrollbar { width: 5px; }
+  .main::-webkit-scrollbar-track { background: transparent; }
+  .main::-webkit-scrollbar-thumb { background: var(--navy-light); border-radius: 10px; }
+
+  /* ─── SCREENS ────────────────────────────────── */
+  .screen {
+    display: none;
+    animation: screenIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    min-height: 100vh;
+  }
+
+  .screen.active { display: flex; flex-direction: column; }
+
+  @keyframes screenIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── SCREEN: HOME ───────────────────────────── */
+  #screen-home {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 48px;
+    position: relative;
+  }
+
+  .home-bg-orb {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(114,47,55,0.12) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    animation: orbPulse 6s ease-in-out infinite;
+  }
+
+  @keyframes orbPulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+    50%       { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+  }
+
+  .home-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: var(--wine-light);
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .home-heading {
+    font-size: clamp(38px, 5vw, 58px);
+    font-weight: 800;
+    line-height: 1.08;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .home-heading em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--ink-dim);
+  }
+
+  .home-sub {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--ink-dim);
+    max-width: 380px;
+    line-height: 1.7;
+    margin: 0 auto 44px;
+    position: relative;
+  }
+
+  .home-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    max-width: 680px;
+    width: 100%;
+    position: relative;
+  }
+
+  .home-card {
+    background: var(--navy-mid);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    cursor: pointer;
+    transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    text-align: left;
+  }
+
+  .home-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(114,47,55,0.5);
+    background: var(--navy-light);
+  }
+
+  .home-card-icon {
+    width: 38px;
+    height: 38px;
+    background: rgba(114,47,55,0.15);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+    color: var(--wine-light);
+  }
+
+  .home-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 5px;
+  }
+
+  .home-card-desc {
+    font-size: 11.5px;
+    font-weight: 400;
+    color: var(--ink-ghost);
+    line-height: 1.5;
+  }
+
+  /* ─── SCREEN LAYOUTS ─────────────────────────── */
+  .screen-header {
+    padding: 48px 52px 32px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .screen-header-eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: var(--wine-light);
+    margin-bottom: 10px;
+  }
+
+  .screen-title {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+
+  .screen-subtitle {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--ink-dim);
+    margin-top: 6px;
+    line-height: 1.6;
+  }
+
+  .screen-body {
+    padding: 40px 52px;
+    flex: 1;
+  }
+
+  /* ─── FORM ELEMENTS ──────────────────────────── */
+  .form-row {
+    display: grid;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .form-row.cols-2 { grid-template-columns: 1fr 1fr; }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+  }
+
+  input, textarea {
+    background: var(--navy-mid);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-sm);
+    padding: 13px 16px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    width: 100%;
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: var(--ink-ghost);
+    font-weight: 300;
+  }
+
+  input:focus, textarea:focus {
+    border-color: rgba(114,47,55,0.6);
+    box-shadow: 0 0 0 3px rgba(114,47,55,0.12);
+    background: var(--navy-light);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 140px;
+    line-height: 1.65;
+  }
+
+  /* ─── BUTTONS ────────────────────────────────── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 28px;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    font-family: 'Raleway', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.15);
+    opacity: 0;
+    transition: opacity 0.15s;
+    border-radius: var(--radius-sm);
+  }
+
+  .btn:active { transform: scale(0.97); }
+  .btn:active::after { opacity: 1; }
+
+  .btn-primary {
+    background: var(--wine);
+    color: var(--ink);
+    box-shadow: 0 4px 20px rgba(114,47,55,0.3);
+  }
+
+  .btn-primary:hover {
+    background: var(--wine-light);
+    box-shadow: 0 6px 28px rgba(114,47,55,0.45);
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost {
+    background: rgba(255,255,255,0.05);
+    color: var(--ink-dim);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .btn-ghost:hover {
+    background: rgba(255,255,255,0.09);
+    color: var(--ink);
+  }
+
+  .btn-danger {
+    background: rgba(192, 57, 43, 0.15);
+    color: #E57373;
+    border: 1px solid rgba(192,57,43,0.25);
+  }
+
+  .btn-danger:hover {
+    background: rgba(192, 57, 43, 0.25);
+    box-shadow: 0 4px 16px rgba(192,57,43,0.2);
+  }
+
+  .btn-loading {
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  .btn svg { width: 15px; height: 15px; }
+
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+    align-items: center;
+  }
+
+  /* ─── RESULT / TOAST STATES ──────────────────── */
+  .result-box {
+    margin-top: 24px;
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    font-size: 13.5px;
+    font-weight: 500;
+    line-height: 1.6;
+    animation: resultSlide 0.35s cubic-bezier(0.4,0,0.2,1);
+    display: none;
+  }
+
+  .result-box.show { display: block; }
+
+  @keyframes resultSlide {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .result-box.success {
+    background: rgba(61,122,94,0.15);
+    border: 1px solid rgba(61,122,94,0.35);
+    color: #7ECBA9;
+  }
+
+  .result-box.error {
+    background: rgba(192,57,43,0.12);
+    border: 1px solid rgba(192,57,43,0.3);
+    color: #E88080;
+  }
+
+  .result-box-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    opacity: 0.7;
+  }
+
+  .result-box-message { font-weight: 500; }
+
+  .result-box-meta {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--ink-dim);
+  }
+
+  /* ─── NOTE CARD (read / list) ────────────────── */
+  .note-card {
+    background: var(--navy-mid);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    animation: noteReveal 0.45s cubic-bezier(0.4,0,0.2,1) forwards;
+  }
+
+  @keyframes noteReveal {
+    from { opacity: 0; transform: scale(0.97) translateY(12px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .note-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+
+  .note-card-meta { display: flex; flex-direction: column; gap: 4px; }
+
+  .note-card-id {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--wine-light);
+    text-transform: uppercase;
+  }
+
+  .note-card-author {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .note-card-time {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--ink-ghost);
+    margin-top: 2px;
+  }
+
+  .note-card-actions { display: flex; gap: 8px; }
+
+  .note-card-body {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.75;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* ─── ALL NOTES GRID ─────────────────────────── */
+  .notes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  .notes-grid-item {
+    background: var(--navy-mid);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    animation: noteReveal 0.4s ease forwards;
+    animation-delay: calc(var(--i, 0) * 0.06s);
+    opacity: 0;
+  }
+
+  .notes-grid-item:hover {
+    transform: translateY(-3px);
+    border-color: rgba(114,47,55,0.4);
+  }
+
+  .notes-grid-item .id-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(114,47,55,0.14);
+    color: var(--wine-light);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+
+  .notes-grid-item .note-snippet {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .notes-grid-item .note-time {
+    font-size: 10.5px;
+    color: var(--ink-ghost);
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .notes-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--ink-ghost);
+    font-size: 14px;
+  }
+
+  .notes-empty-icon {
+    font-size: 36px;
+    margin-bottom: 12px;
+    opacity: 0.3;
+  }
+
+  /* ─── SEARCH ROW ─────────────────────────────── */
+  .search-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .search-row input { flex: 1; }
+
+  /* ─── CONFIRM DIALOG ─────────────────────────── */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(14,20,27,0.75);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    backdrop-filter: blur(6px);
+  }
+
+  .overlay.show { display: flex; }
+
+  .dialog {
+    background: var(--navy-mid);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 40px 44px;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    animation: dialogIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+  }
+
+  @keyframes dialogIn {
+    from { opacity: 0; transform: scale(0.88) translateY(20px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .dialog-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(192,57,43,0.12);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: #E57373;
+  }
+
+  .dialog-icon svg { width: 26px; height: 26px; }
+
+  .dialog-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+
+  .dialog-message {
+    font-size: 13.5px;
+    font-weight: 400;
+    color: var(--ink-dim);
+    line-height: 1.65;
+    margin-bottom: 28px;
+  }
+
+  .dialog-btns { display: flex; gap: 12px; justify-content: center; }
+  .dialog-btns .btn { flex: 1; }
+
+  /* ─── SPINNER ────────────────────────────────── */
+  .spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+
+  .btn-loading .spinner { display: inline-block; }
+  .btn-loading .btn-text { display: none; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ─── TOAST ──────────────────────────────────── */
+  #toast {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: var(--navy-mid);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius);
+    padding: 14px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    z-index: 999;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  #toast.show { transform: translateY(0); opacity: 1; }
+  #toast .toast-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ─── LOADING BAR ────────────────────────────── */
+  #loading-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: var(--wine);
+    width: 0%;
+    transition: width 0.3s ease;
+    z-index: 9999;
+    box-shadow: 0 0 8px rgba(114,47,55,0.7);
+  }
+
+  /* ─── NOTE ID BADGE (post-create) ───────────── */
+  .note-id-reveal {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(114,47,55,0.15);
+    border: 1px solid rgba(114,47,55,0.35);
+    border-radius: var(--radius-sm);
+    padding: 10px 18px;
+    margin-top: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+  }
+
+  .note-id-reveal span { color: var(--ink-ghost); font-size: 11px; font-weight: 500; }
+
+  /* ─── DELETE ALL SCREEN ──────────────────────── */
+  #screen-deleteall .screen-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .danger-zone {
+    background: rgba(192,57,43,0.06);
+    border: 1px solid rgba(192,57,43,0.2);
+    border-radius: var(--radius);
+    padding: 32px 36px;
+    max-width: 520px;
+    width: 100%;
+  }
+
+  .danger-zone-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    color: #E57373;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .danger-zone-desc {
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--ink-dim);
+    line-height: 1.65;
+    margin-bottom: 24px;
+  }
+
+  /* ─── CHAR COUNTER ───────────────────────────── */
+  .char-counter {
+    font-size: 11px;
+    color: var(--ink-ghost);
+    text-align: right;
+    margin-top: 6px;
+    transition: color 0.2s;
+  }
+  .char-counter.warn { color: #E57373; }
+
+  /* ─── RESPONSIVE ─────────────────────────────── */
+  @media (max-width: 768px) {
+    .shell { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .screen-header { padding: 32px 28px 24px; }
+    .screen-body { padding: 28px; }
+    .home-grid { grid-template-columns: 1fr 1fr; }
+    .form-row.cols-2 { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+
+  /* ─── RIPPLE ─────────────────────────────────── */
+  .ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    transform: scale(0);
+    animation: rippleAnim 0.55s linear;
+    pointer-events: none;
+  }
+
+  @keyframes rippleAnim {
+    to { transform: scale(4); opacity: 0; }
+  }
+
+  /* ─── PULSE RING (success) ───────────────────── */
+  .pulse-ring {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 120px;
+    height: 120px;
+    margin: -60px 0 0 -60px;
+    border: 3px solid var(--success);
+    border-radius: 50%;
+    animation: pulseRingAnim 0.7s ease-out forwards;
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0;
+  }
+
+  @keyframes pulseRingAnim {
+    0%   { transform: scale(0.5); opacity: 0.8; }
+    100% { transform: scale(2.5); opacity: 0; }
+  }
+
+  /* ─── TYPING INDICATOR ───────────────────────── */
+  .typing-dots {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .typing-dots span {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--ink-dim);
+    animation: dotBounce 1.2s infinite ease-in-out;
+  }
+
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes dotBounce {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40%            { transform: scale(1); opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<div id="loading-bar"></div>
+
+<!-- CONFIRM DIALOG -->
+<div class="overlay" id="overlay">
+  <div class="dialog" id="dialog">
+    <div class="dialog-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>
+      </svg>
+    </div>
+    <div class="dialog-title" id="dialog-title">Delete all notes?</div>
+    <div class="dialog-message" id="dialog-message">This action cannot be undone. All notes for this user will be permanently removed.</div>
+    <div class="dialog-btns">
+      <button class="btn btn-ghost" onclick="closeDialog()">Cancel</button>
+      <button class="btn btn-danger" id="dialog-confirm">Yes, delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast">
+  <span class="toast-dot" id="toast-dot"></span>
+  <span id="toast-msg"></span>
+</div>
+
+<!-- SHELL -->
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8" style="fill:none;stroke:#F0EBE3;stroke-width:2"/><line x1="16" y1="13" x2="8" y2="13" style="stroke:#F0EBE3;stroke-width:2"/><line x1="16" y1="17" x2="8" y2="17" style="stroke:#F0EBE3;stroke-width:2"/><line x1="10" y1="9" x2="8" y2="9" style="stroke:#F0EBE3;stroke-width:2"/></svg>
+      </div>
+      <div class="brand-name">List It Up</div>
+      <div class="brand-tagline">Your thoughts, kept.</div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-section-label" style="margin-bottom:14px;">Operations</div>
+
+      <div class="nav-item active" onclick="navigate('home')" id="nav-home">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+        <span class="nav-label">Home</span>
+        <span class="nav-dot"></span>
+      </div>
+
+      <div class="nav-item" onclick="navigate('create')" id="nav-create">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span class="nav-label">Create Note</span>
+        <span class="nav-dot"></span>
+      </div>
+
+      <div class="nav-item" onclick="navigate('read')" id="nav-read">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        <span class="nav-label">Read Note</span>
+        <span class="nav-dot"></span>
+      </div>
+
+      <div class="nav-item" onclick="navigate('update')" id="nav-update">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        <span class="nav-label">Update Note</span>
+        <span class="nav-dot"></span>
+      </div>
+
+      <div class="nav-item" onclick="navigate('delete')" id="nav-delete">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,6 5,6 21,6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        <span class="nav-label">Delete Note</span>
+        <span class="nav-dot"></span>
+      </div>
+
+      <div class="nav-item" onclick="navigate('all')" id="nav-all">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        <span class="nav-label">All Notes</span>
+        <span class="nav-dot"></span>
+      </div>
+
+      <div class="nav-item" onclick="navigate('deleteall')" id="nav-deleteall">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        <span class="nav-label">Delete All</span>
+        <span class="nav-dot"></span>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      Built for<br/>people who<br/>think in words.
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main" id="main">
+
+    <!-- HOME -->
+    <div class="screen active" id="screen-home">
+      <div class="home-bg-orb"></div>
+      <div class="home-eyebrow">List It Up &nbsp;/&nbsp; Notes</div>
+      <h1 class="home-heading">Every thought<br/><em>deserves a place.</em></h1>
+      <p class="home-sub">A minimal, precise workspace for capturing what matters. Choose an operation to begin.</p>
+      <div class="home-grid">
+        <div class="home-card" onclick="navigate('create')">
+          <div class="home-card-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+          <div class="home-card-title">Create</div>
+          <div class="home-card-desc">Write a new note and save it to your account.</div>
+        </div>
+        <div class="home-card" onclick="navigate('read')">
+          <div class="home-card-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </div>
+          <div class="home-card-title">Read</div>
+          <div class="home-card-desc">Retrieve a note instantly by its ID.</div>
+        </div>
+        <div class="home-card" onclick="navigate('update')">
+          <div class="home-card-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </div>
+          <div class="home-card-title">Update</div>
+          <div class="home-card-desc">Edit the content of any existing note.</div>
+        </div>
+        <div class="home-card" onclick="navigate('delete')">
+          <div class="home-card-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3,6 5,6 21,6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
+          </div>
+          <div class="home-card-title">Delete</div>
+          <div class="home-card-desc">Remove a specific note permanently.</div>
+        </div>
+        <div class="home-card" onclick="navigate('all')">
+          <div class="home-card-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          </div>
+          <div class="home-card-title">All Notes</div>
+          <div class="home-card-desc">Browse the full collection for any user.</div>
+        </div>
+        <div class="home-card" onclick="navigate('deleteall')">
+          <div class="home-card-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          </div>
+          <div class="home-card-title">Clear All</div>
+          <div class="home-card-desc">Wipe all notes for a user at once.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CREATE -->
+    <div class="screen" id="screen-create">
+      <div class="screen-header">
+        <div class="screen-header-eyebrow">New Entry</div>
+        <h2 class="screen-title">Create a Note</h2>
+        <p class="screen-subtitle">Set your user details and write your note below. Your note ID will be generated automatically.</p>
+      </div>
+      <div class="screen-body">
+        <div class="form-row cols-2">
+          <div class="field">
+            <label for="c-userId">User ID</label>
+            <input type="number" id="c-userId" placeholder="e.g. 1001" min="1" />
+          </div>
+          <div class="field">
+            <label for="c-userName">Username</label>
+            <input type="text" id="c-userName" placeholder="e.g. alex" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="c-notes">Note Content</label>
+            <textarea id="c-notes" placeholder="What's on your mind…" maxlength="2000" oninput="updateCounter(this, 'c-counter', 2000)"></textarea>
+            <div class="char-counter" id="c-counter">0 / 2000</div>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" id="btn-create" onclick="handleCreate()">
+            <span class="btn-text">Save Note</span>
+            <span class="spinner"></span>
+          </button>
+          <button class="btn btn-ghost" onclick="clearForm('create')">Clear</button>
+        </div>
+        <div class="result-box" id="create-result"></div>
+      </div>
+    </div>
+
+    <!-- READ -->
+    <div class="screen" id="screen-read">
+      <div class="screen-header">
+        <div class="screen-header-eyebrow">Retrieve</div>
+        <h2 class="screen-title">Read a Note</h2>
+        <p class="screen-subtitle">Enter the Note ID to retrieve its content.</p>
+      </div>
+      <div class="screen-body">
+        <div class="search-row">
+          <input type="number" id="r-noteId" placeholder="Note ID" min="1" onkeydown="if(event.key==='Enter') handleRead()" />
+          <button class="btn btn-primary" id="btn-read" onclick="handleRead()">
+            <span class="btn-text">Fetch Note</span>
+            <span class="spinner"></span>
+          </button>
+        </div>
+        <div id="read-result"></div>
+      </div>
+    </div>
+
+    <!-- UPDATE -->
+    <div class="screen" id="screen-update">
+      <div class="screen-header">
+        <div class="screen-header-eyebrow">Edit</div>
+        <h2 class="screen-title">Update a Note</h2>
+        <p class="screen-subtitle">Enter the Note ID and provide the revised content. The timestamp will refresh automatically.</p>
+      </div>
+      <div class="screen-body">
+        <div class="form-row">
+          <div class="field">
+            <label for="u-noteId">Note ID</label>
+            <input type="number" id="u-noteId" placeholder="Note ID to update" min="1" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="u-notes">Updated Content</label>
+            <textarea id="u-notes" placeholder="Write the revised note here…" maxlength="2000" oninput="updateCounter(this, 'u-counter', 2000)"></textarea>
+            <div class="char-counter" id="u-counter">0 / 2000</div>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" id="btn-update" onclick="handleUpdate()">
+            <span class="btn-text">Save Changes</span>
+            <span class="spinner"></span>
+          </button>
+          <button class="btn btn-ghost" onclick="clearForm('update')">Clear</button>
+        </div>
+        <div class="result-box" id="update-result"></div>
+      </div>
+    </div>
+
+    <!-- DELETE -->
+    <div class="screen" id="screen-delete">
+      <div class="screen-header">
+        <div class="screen-header-eyebrow">Remove</div>
+        <h2 class="screen-title">Delete a Note</h2>
+        <p class="screen-subtitle">Enter the Note ID you want to permanently remove.</p>
+      </div>
+      <div class="screen-body">
+        <div class="search-row">
+          <input type="number" id="d-noteId" placeholder="Note ID to delete" min="1" onkeydown="if(event.key==='Enter') handleDelete()" />
+          <button class="btn btn-danger" id="btn-delete" onclick="handleDelete()">
+            <span class="btn-text">Delete Note</span>
+            <span class="spinner"></span>
+          </button>
+        </div>
+        <div class="result-box" id="delete-result"></div>
+      </div>
+    </div>
+
+    <!-- ALL NOTES -->
+    <div class="screen" id="screen-all">
+      <div class="screen-header">
+        <div class="screen-header-eyebrow">Collection</div>
+        <h2 class="screen-title">All Notes</h2>
+        <p class="screen-subtitle">Enter a username to view their entire note library.</p>
+      </div>
+      <div class="screen-body">
+        <div class="search-row">
+          <input type="text" id="a-userName" placeholder="Username" onkeydown="if(event.key==='Enter') handleAll()" />
+          <button class="btn btn-primary" id="btn-all" onclick="handleAll()">
+            <span class="btn-text">Load Notes</span>
+            <span class="spinner"></span>
+          </button>
+        </div>
+        <div id="all-result"></div>
+      </div>
+    </div>
+
+    <!-- DELETE ALL -->
+    <div class="screen" id="screen-deleteall">
+      <div class="screen-header">
+        <div class="screen-header-eyebrow">Danger Zone</div>
+        <h2 class="screen-title">Delete All Notes</h2>
+        <p class="screen-subtitle">This permanently removes every note tied to a User ID. Proceed carefully.</p>
+      </div>
+      <div class="screen-body">
+        <div class="danger-zone">
+          <div class="danger-zone-label">Irreversible Action</div>
+          <div class="danger-zone-desc">Enter the User ID below. All notes belonging to this user will be permanently deleted. This cannot be undone.</div>
+          <div class="field" style="margin-bottom:20px;">
+            <label for="da-userId">User ID</label>
+            <input type="number" id="da-userId" placeholder="e.g. 1001" min="1" onkeydown="if(event.key==='Enter') handleDeleteAll()" />
+          </div>
+          <button class="btn btn-danger" id="btn-deleteall" onclick="handleDeleteAll()">
+            <span class="btn-text">Delete All Notes</span>
+            <span class="spinner"></span>
+          </button>
+        </div>
+        <div class="result-box" id="deleteall-result" style="margin-top:24px; max-width:520px;"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+/* ══════════════════════════════════════════
+   AUDIO ENGINE (Web Audio API)
+══════════════════════════════════════════ */
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let ctx;
+
+function ensureCtx() {
+  if (!ctx) ctx = new AudioCtx();
+  if (ctx.state === 'suspended') ctx.resume();
+}
+
+function playTone(freq, type, duration, vol = 0.15, delay = 0) {
+  try {
+    ensureCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
+    gain.gain.setValueAtTime(vol, ctx.currentTime + delay);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
+    osc.start(ctx.currentTime + delay);
+    osc.stop(ctx.currentTime + delay + duration);
+  } catch(e) {}
+}
+
+function soundClick() {
+  playTone(520, 'sine', 0.08, 0.1);
+}
+
+function soundSuccess() {
+  playTone(440, 'sine', 0.15, 0.12);
+  playTone(554, 'sine', 0.15, 0.1, 0.12);
+  playTone(660, 'sine', 0.2, 0.12, 0.24);
+}
+
+function soundError() {
+  playTone(260, 'sawtooth', 0.15, 0.08);
+  playTone(220, 'sawtooth', 0.2, 0.08, 0.15);
+}
+
+function soundDelete() {
+  playTone(330, 'triangle', 0.1, 0.1);
+  playTone(200, 'triangle', 0.2, 0.1, 0.12);
+}
+
+function soundNav() {
+  playTone(480, 'sine', 0.07, 0.08);
+}
+
+function soundFetch() {
+  playTone(600, 'sine', 0.06, 0.08);
+  playTone(700, 'sine', 0.06, 0.08, 0.08);
+}
+
+/* ══════════════════════════════════════════
+   HAPTICS
+══════════════════════════════════════════ */
+function vibrate(pattern) {
+  if (navigator.vibrate) navigator.vibrate(pattern);
+}
+
+/* ══════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════ */
+let currentScreen = 'home';
+
+function navigate(screen) {
+  soundNav();
+  vibrate(20);
+
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+  const target = document.getElementById('screen-' + screen);
+  const navTarget = document.getElementById('nav-' + screen);
+
+  if (target) {
+    target.classList.add('active');
+    document.getElementById('main').scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  if (navTarget) navTarget.classList.add('active');
+
+  currentScreen = screen;
+}
+
+/* ══════════════════════════════════════════
+   LOADING BAR
+══════════════════════════════════════════ */
+function loadingStart() {
+  const bar = document.getElementById('loading-bar');
+  bar.style.width = '0%';
+  bar.style.transition = 'width 0.8s ease';
+  setTimeout(() => bar.style.width = '70%', 10);
+}
+
+function loadingEnd() {
+  const bar = document.getElementById('loading-bar');
+  bar.style.transition = 'width 0.3s ease';
+  bar.style.width = '100%';
+  setTimeout(() => { bar.style.width = '0%'; bar.style.transition = 'none'; }, 400);
+}
+
+/* ══════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════ */
+let toastTimer;
+function showToast(msg, type = 'success') {
+  clearTimeout(toastTimer);
+  const toast = document.getElementById('toast');
+  const dot = document.getElementById('toast-dot');
+  document.getElementById('toast-msg').textContent = msg;
+  dot.style.background = type === 'success' ? '#7ECBA9' : '#E88080';
+  toast.classList.add('show');
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
+}
+
+/* ══════════════════════════════════════════
+   BUTTON STATE
+══════════════════════════════════════════ */
+function setLoading(btnId, on) {
+  const btn = document.getElementById(btnId);
+  if (on) btn.classList.add('btn-loading');
+  else btn.classList.remove('btn-loading');
+}
+
+/* ══════════════════════════════════════════
+   RESULT BOX
+══════════════════════════════════════════ */
+function showResult(id, type, label, message, meta = '') {
+  const box = document.getElementById(id);
+  box.className = 'result-box show ' + type;
+  box.innerHTML = `
+    <div class="result-box-label">${label}</div>
+    <div class="result-box-message">${message}</div>
+    ${meta ? `<div class="result-box-meta">${meta}</div>` : ''}
+  `;
+}
+
+/* ══════════════════════════════════════════
+   PULSE RING
+══════════════════════════════════════════ */
+function spawnPulse() {
+  const el = document.createElement('div');
+  el.className = 'pulse-ring';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 800);
+}
+
+/* ══════════════════════════════════════════
+   RIPPLE ON BUTTONS
+══════════════════════════════════════════ */
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.btn');
+  if (!btn) return;
+  const r = document.createElement('span');
+  r.className = 'ripple';
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - rect.left - size/2}px;top:${e.clientY - rect.top - size/2}px`;
+  btn.appendChild(r);
+  setTimeout(() => r.remove(), 600);
+});
+
+/* ══════════════════════════════════════════
+   CHAR COUNTER
+══════════════════════════════════════════ */
+function updateCounter(el, counterId, max) {
+  const len = el.value.length;
+  const counter = document.getElementById(counterId);
+  counter.textContent = `${len} / ${max}`;
+  counter.classList.toggle('warn', len > max * 0.9);
+}
+
+/* ══════════════════════════════════════════
+   CLEAR FORMS
+══════════════════════════════════════════ */
+function clearForm(screen) {
+  soundClick();
+  vibrate(15);
+  if (screen === 'create') {
+    document.getElementById('c-userId').value = '';
+    document.getElementById('c-userName').value = '';
+    document.getElementById('c-notes').value = '';
+    document.getElementById('c-counter').textContent = '0 / 2000';
+    document.getElementById('create-result').className = 'result-box';
+  } else if (screen === 'update') {
+    document.getElementById('u-noteId').value = '';
+    document.getElementById('u-notes').value = '';
+    document.getElementById('u-counter').textContent = '0 / 2000';
+    document.getElementById('update-result').className = 'result-box';
+  }
+}
+
+/* ══════════════════════════════════════════
+   API HELPERS
+══════════════════════════════════════════ */
+async function api(method, url, body = null) {
+  const opts = { method, headers: { 'Content-Type': 'application/json' } };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(url, opts);
+  return res.json();
+}
+
+/* ══════════════════════════════════════════
+   CREATE
+══════════════════════════════════════════ */
+async function handleCreate() {
+  const userId = document.getElementById('c-userId').value.trim();
+  const userName = document.getElementById('c-userName').value.trim();
+  const notes = document.getElementById('c-notes').value.trim();
+
+  if (!userId || !userName || !notes) {
+    soundError(); vibrate([30,20,30]);
+    showResult('create-result', 'error', 'Validation', 'All fields are required.');
+    return;
+  }
+
+  soundClick();
+  setLoading('btn-create', true);
+  loadingStart();
+
+  const data = await api('POST', '/api/create', { userId: parseInt(userId), userName, notes });
+  loadingEnd();
+  setLoading('btn-create', false);
+
+  if (data.success) {
+    soundSuccess(); vibrate([30, 50, 30]); spawnPulse();
+    showResult('create-result', 'success', 'Note Saved',
+      data.message,
+      `<div class="note-id-reveal"><span>Your Note ID</span>&nbsp; #${data.notesId}</div><br/>Created at: ${data.timestamp}`
+    );
+    showToast('Note created — ID #' + data.notesId);
+  } else {
+    soundError(); vibrate([50, 30, 50]);
+    showResult('create-result', 'error', 'Error', data.message);
+  }
+}
+
+/* ══════════════════════════════════════════
+   READ
+══════════════════════════════════════════ */
+async function handleRead() {
+  const noteId = document.getElementById('r-noteId').value.trim();
+  if (!noteId) { soundError(); return; }
+
+  soundFetch(); vibrate(20);
+  setLoading('btn-read', true);
+  loadingStart();
+  document.getElementById('read-result').innerHTML = `<div style="padding:20px 0; color:var(--ink-ghost); display:flex; align-items:center; gap:10px; font-size:13px;">
+    <div class="typing-dots"><span></span><span></span><span></span></div> Fetching note…
+  </div>`;
+
+  const data = await api('GET', '/api/read/' + noteId);
+  loadingEnd();
+  setLoading('btn-read', false);
+
+  if (data.success) {
+    soundSuccess(); vibrate([20, 30, 20]);
+    const n = data.note;
+    document.getElementById('read-result').innerHTML = `
+      <div class="note-card">
+        <div class="note-card-header">
+          <div class="note-card-meta">
+            <div class="note-card-id">Note #${n.id}</div>
+            <div class="note-card-author">${n.author}</div>
+            <div class="note-card-time">${n.timestamp}</div>
+          </div>
+          <div class="note-card-actions">
+            <button class="btn btn-ghost" style="padding:8px 14px;font-size:12px;" onclick="copyNote('${n.content.replace(/'/g, "\\'")}')">Copy</button>
+          </div>
+        </div>
+        <div class="note-card-body">${escapeHtml(n.content)}</div>
+      </div>`;
+  } else {
+    soundError(); vibrate([40, 20, 40]);
+    document.getElementById('read-result').innerHTML = `<div class="result-box show error"><div class="result-box-label">Not Found</div><div class="result-box-message">${data.message}</div></div>`;
+  }
+}
+
+/* ══════════════════════════════════════════
+   UPDATE
+══════════════════════════════════════════ */
+async function handleUpdate() {
+  const noteId = document.getElementById('u-noteId').value.trim();
+  const notes = document.getElementById('u-notes').value.trim();
+  if (!noteId || !notes) { soundError(); vibrate([30,20,30]); showResult('update-result','error','Validation','Both fields are required.'); return; }
+
+  soundClick(); vibrate(20);
+  setLoading('btn-update', true);
+  loadingStart();
+
+  const data = await api('PUT', '/api/update/' + noteId, { notes });
+  loadingEnd();
+  setLoading('btn-update', false);
+
+  if (data.success) {
+    soundSuccess(); vibrate([20, 40, 20]); spawnPulse();
+    showResult('update-result', 'success', 'Updated', data.message, 'Last edited: ' + data.timestamp);
+    showToast('Note #' + noteId + ' updated.');
+  } else {
+    soundError(); vibrate([40, 20, 40]);
+    showResult('update-result', 'error', 'Error', data.message);
+  }
+}
+
+/* ══════════════════════════════════════════
+   DELETE
+══════════════════════════════════════════ */
+function handleDelete() {
+  const noteId = document.getElementById('d-noteId').value.trim();
+  if (!noteId) { soundError(); return; }
+  openDialog(
+    'Delete this note?',
+    `Note #${noteId} will be permanently removed. This cannot be undone.`,
+    async () => {
+      soundDelete(); vibrate([40,20,40]);
+      setLoading('btn-delete', true);
+      loadingStart();
+      const data = await api('DELETE', '/api/delete/' + noteId);
+      loadingEnd();
+      setLoading('btn-delete', false);
+      if (data.success) {
+        soundSuccess(); vibrate([20, 40, 20]);
+        showResult('delete-result', 'success', 'Deleted', data.message);
+        showToast('Note #' + noteId + ' deleted.', 'success');
+        document.getElementById('d-noteId').value = '';
+      } else {
+        soundError(); vibrate([50, 30, 50]);
+        showResult('delete-result', 'error', 'Error', data.message);
+      }
+    }
+  );
+}
+
+/* ══════════════════════════════════════════
+   ALL NOTES
+══════════════════════════════════════════ */
+async function handleAll() {
+  const userName = document.getElementById('a-userName').value.trim();
+  if (!userName) { soundError(); return; }
+
+  soundFetch(); vibrate(20);
+  setLoading('btn-all', true);
+  loadingStart();
+  document.getElementById('all-result').innerHTML = `<div style="padding:20px 0; color:var(--ink-ghost); display:flex; align-items:center; gap:10px; font-size:13px;">
+    <div class="typing-dots"><span></span><span></span><span></span></div> Loading notes for ${escapeHtml(userName)}…
+  </div>`;
+
+  const data = await api('GET', '/api/notes/' + encodeURIComponent(userName));
+  loadingEnd();
+  setLoading('btn-all', false);
+
+  if (data.success) {
+    soundSuccess(); vibrate([20, 30, 20]);
+    const notes = data.notes;
+    if (notes.length === 0) {
+      document.getElementById('all-result').innerHTML = `
+        <div class="notes-grid"><div class="notes-empty">
+          <div class="notes-empty-icon">📭</div>
+          No notes found for <strong>${escapeHtml(userName)}</strong>.
+        </div></div>`;
+    } else {
+      document.getElementById('all-result').innerHTML = `
+        <div style="font-size:12px;font-weight:600;color:var(--ink-ghost);margin-bottom:18px;letter-spacing:0.06em;">${notes.length} note${notes.length > 1 ? 's' : ''} &nbsp;—&nbsp; ${escapeHtml(data.userName)}</div>
+        <div class="notes-grid">
+          ${notes.map((n, i) => `
+            <div class="notes-grid-item" style="--i:${i}" onclick="quickRead(${n.id})">
+              <div class="id-badge"># ${n.id}</div>
+              <div class="note-snippet">${escapeHtml(n.content)}</div>
+              <div class="note-time">${n.timestamp}</div>
+            </div>
+          `).join('')}
+        </div>`;
+    }
+  } else {
+    soundError(); vibrate([40, 20, 40]);
+    document.getElementById('all-result').innerHTML = `<div class="result-box show error"><div class="result-box-label">Error</div><div class="result-box-message">${data.message}</div></div>`;
+  }
+}
+
+async function quickRead(noteId) {
+  soundClick(); vibrate(15);
+  navigate('read');
+  setTimeout(() => {
+    document.getElementById('r-noteId').value = noteId;
+    handleRead();
+  }, 400);
+}
+
+/* ══════════════════════════════════════════
+   DELETE ALL
+══════════════════════════════════════════ */
+function handleDeleteAll() {
+  const userId = document.getElementById('da-userId').value.trim();
+  if (!userId) { soundError(); return; }
+  openDialog(
+    'Delete all notes?',
+    `Every note for User ID ${userId} will be permanently wiped. This cannot be undone.`,
+    async () => {
+      soundDelete(); vibrate([50, 30, 50, 30, 50]);
+      setLoading('btn-deleteall', true);
+      loadingStart();
+      const data = await api('DELETE', '/api/deleteall/' + userId);
+      loadingEnd();
+      setLoading('btn-deleteall', false);
+      if (data.success) {
+        soundSuccess(); vibrate([30, 40, 30]);
+        showResult('deleteall-result', 'success', 'All Cleared', data.message);
+        showToast(`${data.count} notes deleted.`, 'success');
+        document.getElementById('da-userId').value = '';
+      } else {
+        soundError(); vibrate([50, 30, 50]);
+        showResult('deleteall-result', 'error', 'Error', data.message);
+      }
+    }
+  );
+}
+
+/* ══════════════════════════════════════════
+   DIALOG
+══════════════════════════════════════════ */
+let dialogCallback = null;
+
+function openDialog(title, message, onConfirm) {
+  soundClick(); vibrate(15);
+  document.getElementById('dialog-title').textContent = title;
+  document.getElementById('dialog-message').textContent = message;
+  dialogCallback = onConfirm;
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('dialog-confirm').onclick = () => { closeDialog(); if (dialogCallback) dialogCallback(); };
+}
+
+function closeDialog() {
+  document.getElementById('overlay').classList.remove('show');
+  dialogCallback = null;
+}
+
+document.getElementById('overlay').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('overlay')) closeDialog();
+});
+
+/* ══════════════════════════════════════════
+   COPY NOTE
+══════════════════════════════════════════ */
+function copyNote(content) {
+  navigator.clipboard.writeText(content).then(() => {
+    soundSuccess(); vibrate([15, 10, 15]);
+    showToast('Copied to clipboard.');
+  });
+}
+
+/* ══════════════════════════════════════════
+   UTILS
+══════════════════════════════════════════ */
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+/* ══════════════════════════════════════════
+   INPUT SOUNDS
+══════════════════════════════════════════ */
+document.querySelectorAll('input, textarea').forEach(el => {
+  el.addEventListener('focus', () => { playTone(560, 'sine', 0.05, 0.06); });
+});
+</script>
+</body>
+</html>
