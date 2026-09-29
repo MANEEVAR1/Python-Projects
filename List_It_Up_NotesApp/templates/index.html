@@ -913,16 +913,6 @@
     padding: 0 0 env(safe-area-inset-bottom, 6px);
   }
 
-  .mobile-byline {
-    text-align: center;
-    font-size: 9px;
-    font-weight: 600;
-    color: var(--accent);
-    letter-spacing: 0.04em;
-    padding: 5px 0 0;
-    opacity: 0.8;
-  }
-
   .mobile-nav-inner {
     display: flex;
     justify-content: space-around;
@@ -971,7 +961,7 @@
     .sidebar { display: none; }
 
     .main {
-      padding-bottom: 70px;
+      padding-bottom: calc(104px + env(safe-area-inset-bottom, 0px));
       overscroll-behavior-y: contain;
     }
 
@@ -1069,13 +1059,15 @@
   @media (max-width: 768px) {
     .mobile-nav { padding-bottom: calc(22px + env(safe-area-inset-bottom, 0px)); }
     #byline     { bottom: 0; }
-    #toast      { bottom: calc(22px + 70px); }
+    #toast      { bottom: calc(104px + env(safe-area-inset-bottom, 0px)); }
   }
 </style>
 </head>
 <body>
 
 <div id="loading-bar"></div>
+
+<div id="byline">Developed By Maneev Arora 👑</div>
 
 <!-- CONFIRM DIALOG -->
 <div class="overlay" id="overlay">
@@ -1160,7 +1152,6 @@
     </nav>
 
     <div class="sidebar-footer">
-      <strong>Developed By Maneev Arora 👑</strong><br/>
       Built for people who<br/>think in words.
     </div>
   </aside>
@@ -1398,7 +1389,6 @@
 
 <!-- MOBILE NAV -->
 <nav class="mobile-nav">
-  <div class="mobile-byline">Developed By Maneev Arora 👑</div>
   <div class="mobile-nav-inner">
     <button class="mobile-nav-btn active" id="mnav-home" onclick="navigate('home')">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
