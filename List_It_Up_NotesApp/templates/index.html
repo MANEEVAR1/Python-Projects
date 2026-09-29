@@ -39,7 +39,7 @@
     font-family: 'Inter', sans-serif;
     background: var(--bg);
     color: var(--ink);
-    overflow: hidden;
+    /*overflow: hidden;*/
     overscroll-behavior: none;
   }
 
@@ -206,14 +206,10 @@
   }
 
   /* ─── SCREEN: HOME ───────────────────────────── */
-  #screen-home {
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 60px 40px;
-    position: relative;
-    overflow: hidden;
-  }
+     #screen-home {
+      padding: 40px 20px 120px;
+      justify-content: flex-start;
+    }
 
   .home-bg-orb {
     position: absolute;
@@ -945,24 +941,25 @@
     .home-grid { grid-template-columns: repeat(2, 1fr); max-width: 480px; }
   }
 
-  @media (max-width: 768px) {
-    html, body {
+      html, body {
       overflow: hidden;
       overscroll-behavior: none;
-      touch-action: pan-y;
     }
 
     .shell {
       grid-template-columns: 1fr;
-      height: 100vh;
+      height: 100%;
+      min-height: 100svh;
       overflow: hidden;
     }
 
     .sidebar { display: none; }
 
     .main {
+      height: 100svh;
       padding-bottom: calc(104px + env(safe-area-inset-bottom, 0px));
       overscroll-behavior-y: contain;
+      -webkit-overflow-scrolling: touch;
     }
 
     .mobile-nav { display: block; }

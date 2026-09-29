@@ -17,17 +17,17 @@ def init_db():
     cursor = conn.cursor()
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
-            userId INTEGER PRIMARY KEY,
-            userName TEXT UNIQUE NOT NULL
+            "userId" INTEGER PRIMARY KEY,
+            "userName" TEXT UNIQUE NOT NULL
         )
     """)
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS users_notes (
-            notesId INTEGER PRIMARY KEY,
+            "notesId" INTEGER PRIMARY KEY,
             notes TEXT,
             timestamp TEXT,
-            userId INTEGER,
-            FOREIGN KEY (userId) REFERENCES users(userId)
+            "userId" INTEGER,
+            FOREIGN KEY ("userId") REFERENCES users("userId")
         )
     """)
     conn.commit()
@@ -62,14 +62,14 @@ def create_note():
         cursor = conn.cursor()
 
         # Check if userId already exists with a DIFFERENT userName
-        cursor.execute("SELECT userName FROM users WHERE userId = %s", (userId,))
+        cursor.execute('SELECT "userName" FROM users WHERE "userId" = %s', (userId,))
         existing_user = cursor.fetchone()
         if existing_user and existing_user[0] != userName:
             cursor.close(); conn.close()
             return jsonify({'success': False, 'message': f'User ID {userId} belongs to "{existing_user[0]}", not "{userName}".'}), 409
 
         # Check if userName already exists with a DIFFERENT userId
-        cursor.execute("SELECT userId FROM users WHERE userName = %s", (userName,))
+        cursor.execute('SELECT "userId" FROM users WHERE "userName" = %s', (userName,))
         existing_name = cursor.fetchone()
         if existing_name and existing_name[0] != userId:
             cursor.close(); conn.close()
@@ -77,20 +77,20 @@ def create_note():
 
         # Safe to insert/ignore user
         cursor.execute("""
-            INSERT INTO users (userId, userName)
+            INSERT INTO users ("userId", "userName")
             VALUES (%s, %s)
-            ON CONFLICT (userId) DO NOTHING
+            ON CONFLICT ("userId") DO NOTHING
         """, (userId, userName))
 
         # Generate a unique notesId (retry on collision)
         for _ in range(5):
             notesId = random.randint(1, 9999999)
-            cursor.execute("SELECT notesId FROM users_notes WHERE notesId = %s", (notesId,))
+            cursor.execute('SELECT "notesId" FROM users_notes WHERE "notesId" = %s', (notesId,))
             if cursor.fetchone() is None:
                 break
 
         cursor.execute(
-            "INSERT INTO users_notes (notesId, notes, timestamp, userId) VALUES (%s, %s, %s, %s)",
+            'INSERT INTO users_notes ("notesId", notes, timestamp, "userId") VALUES (%s, %s, %s, %s)',
             (notesId, notes, timestamp, userId)
         )
         conn.commit()
@@ -107,10 +107,10 @@ def read_note(notesId):
         conn   = get_connection()
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT n.notesId, n.notes, n.timestamp, u.userName
+            SELECT n."notesId", n.notes, n.timestamp, u."userName"
             FROM users_notes n
-            JOIN users u ON n.userId = u.userId
-            WHERE n.notesId = %s
+            JOIN users u ON n."userId" = u."userId"
+            WHERE n."notesId" = %s
         """, (notesId,))
         row = cursor.fetchone()
         cursor.close(); conn.close()
@@ -130,13 +130,13 @@ def update_note(notesId):
     try:
         conn   = get_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT notesId FROM users_notes WHERE notesId = %s", (notesId,))
+        cursor.execute('SELECT "notesId" FROM users_notes WHERE "notesId" = %s', (notesId,))
         if cursor.fetchone() is None:
             cursor.close(); conn.close()
             return jsonify({'success': False, 'message': f'No note found with ID #{notesId}.'}), 404
         timestamp = time.strftime("%B %d, %Y — %I:%M %p")
         cursor.execute(
-            "UPDATE users_notes SET notes = %s, timestamp = %s WHERE notesId = %s",
+            'UPDATE users_notes SET notes = %s, timestamp = %s WHERE "notesId" = %s',
             (notes, timestamp, notesId)
         )
         conn.commit()
@@ -151,11 +151,11 @@ def delete_note(notesId):
     try:
         conn   = get_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT notesId FROM users_notes WHERE notesId = %s", (notesId,))
+        cursor.execute('SELECT "notesId" FROM users_notes WHERE "notesId" = %s', (notesId,))
         if cursor.fetchone() is None:
             cursor.close(); conn.close()
             return jsonify({'success': False, 'message': f'No note found with ID #{notesId}.'}), 404
-        cursor.execute("DELETE FROM users_notes WHERE notesId = %s", (notesId,))
+        cursor.execute('DELETE FROM users_notes WHERE "notesId" = %s', (notesId,))
         conn.commit()
         cursor.close(); conn.close()
         return jsonify({'success': True, 'message': 'Note deleted successfully.'})
@@ -168,13 +168,13 @@ def see_all_notes(userName):
     try:
         conn   = get_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT userId FROM users WHERE userName = %s", (userName,))
+        cursor.execute('SELECT "userId" FROM users WHERE "userName" = %s', (userName,))
         user = cursor.fetchone()
         if user is None:
             cursor.close(); conn.close()
             return jsonify({'success': False, 'message': f'User "{userName}" does not exist.'}), 404
         cursor.execute(
-            "SELECT notesId, notes, timestamp FROM users_notes WHERE userId = %s ORDER BY notesId DESC",
+            'SELECT "notesId", notes, timestamp FROM users_notes WHERE "userId" = %s ORDER BY "notesId" DESC',
             (user[0],)
         )
         rows  = cursor.fetchall()
@@ -190,12 +190,12 @@ def delete_all_notes(userId):
     try:
         conn   = get_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT notes FROM users_notes WHERE userId = %s", (userId,))
+        cursor.execute('SELECT "notesId" FROM users_notes WHERE "userId" = %s', (userId,))
         rows = cursor.fetchall()
         if not rows:
             cursor.close(); conn.close()
             return jsonify({'success': False, 'message': f'No notes found for User ID {userId}.'}), 404
-        cursor.execute("DELETE FROM users_notes WHERE userId = %s", (userId,))
+        cursor.execute('DELETE FROM users_notes WHERE "userId" = %s', (userId,))
         conn.commit()
         cursor.close(); conn.close()
         return jsonify({'success': True, 'message': f'All {len(rows)} notes deleted successfully.', 'count': len(rows)})
