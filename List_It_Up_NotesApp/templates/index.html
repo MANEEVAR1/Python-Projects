@@ -1031,7 +1031,7 @@
   /* ─── UNIVERSAL BYLINE ───────────────────────── */
   #byline {
     position: fixed;
-    bottom: 15vh;
+    bottom: 10vh;
     left: 0;
     right: 0;
     height: 22px;
@@ -1042,7 +1042,7 @@
     font-weight: 600;
     letter-spacing: 0.06em;
     color: var(--accent);
-    background: var(--bg-2);
+    /*background: var(--bg-2);*/
     border-top: 1px solid var(--border);
     z-index: 200;
     pointer-events: none;
@@ -1058,7 +1058,7 @@
   /* On mobile the mobile-nav sits above byline — byline replaces its old strip */
   @media (max-width: 768px) {
     .mobile-nav { padding-bottom: calc(22px + env(safe-area-inset-bottom, 0px)); }
-    #byline     { bottom: 0; }
+    #byline     { bottom: 5vh; }
     #toast      { bottom: calc(104px + env(safe-area-inset-bottom, 0px)); }
   }
 </style>
