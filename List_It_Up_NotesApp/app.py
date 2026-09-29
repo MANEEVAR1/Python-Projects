@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify, render_template
 import os
 import random
-import time
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 import psycopg2
 
@@ -15,6 +16,11 @@ if not DATABASE_URL:
 
 def get_connection():
     return psycopg2.connect(DATABASE_URL)
+
+def get_timestamp():
+    return datetime.now(
+        ZoneInfo("Asia/Kolkata")
+    ).strftime("%B %d, %Y — %I:%M %p")
 
 
 def init_db():
@@ -80,9 +86,7 @@ def create_note():
             400
         )
 
-    timestamp = time.strftime(
-        "%B %d, %Y — %I:%M %p"
-    )
+    timestamp = get_timestamp()
 
     conn = None
 
@@ -264,9 +268,7 @@ def update_note(notesId):
             400
         )
 
-    timestamp = time.strftime(
-        "%B %d, %Y — %I:%M %p"
-    )
+    timestamp = get_timestamp()
 
     conn = None
 

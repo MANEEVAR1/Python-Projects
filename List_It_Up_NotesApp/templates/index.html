@@ -1241,6 +1241,54 @@
       padding: 0 12px;
     }
   }
+  /* ══════════════════════════════════════════
+   READ / ALL RESULT FIX
+══════════════════════════════════════════ */
+
+#read-result,
+#all-result {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  margin-top: 18px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+/* The result wrapper itself must never become a large box */
+#read-result.result-box,
+#read-result.result-box.show,
+#all-result.result-box,
+#all-result.result-box.show {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  margin-top: 18px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  animation: none;
+}
+
+/* Actual note card should only be as tall as its content */
+.note-card {
+  height: auto;
+  min-height: 0;
+}
+
+.note-card-body {
+  height: auto;
+  min-height: 0;
+  padding: 20px;
+}
+
+.note-card-actions {
+  height: auto;
+  min-height: 0;
+}
 </style>
 </head>
 <body>
@@ -3194,7 +3242,7 @@ async function handleRead() {
   const result = document.getElementById('read-result');
 
   // Make result container visible immediately
-  result.className = 'result-box show';
+  // result.className = 'result-box show';
 
   result.innerHTML = `
     <div
@@ -3229,7 +3277,7 @@ async function handleRead() {
 
       const n = data.note;
 
-      result.className = 'result-box show';
+      // result.className = 'result-box show';
 
       result.innerHTML = `
         <div class="note-card">
@@ -3280,7 +3328,7 @@ async function handleRead() {
       soundError();
       vibrate([40, 20, 40]);
 
-      result.className = 'result-box show error';
+      result.className = '';
 
       result.innerHTML = `
         <div class="result-box-label">
@@ -3300,8 +3348,7 @@ async function handleRead() {
 
     soundError();
 
-    result.className = 'result-box show error';
-
+    result.className = '';
     result.innerHTML = `
       <div class="result-box-label">
         Error
@@ -3561,7 +3608,7 @@ async function handleAll() {
   const result = document.getElementById('all-result');
 
   // Make result container visible
-  result.className = 'result-box show';
+  // result.className = 'result-box show';
 
   result.innerHTML = `
     <div
@@ -3600,7 +3647,7 @@ async function handleAll() {
         ? data.notes
         : [];
 
-      result.className = 'result-box show';
+      // result.className = 'result-box show';
 
       if (notes.length === 0) {
 
@@ -3673,7 +3720,7 @@ async function handleAll() {
       soundError();
       vibrate([40, 20, 40]);
 
-      result.className = 'result-box show error';
+      result.className = '';
 
       result.innerHTML = `
         <div class="result-box-label">
@@ -3693,7 +3740,7 @@ async function handleAll() {
 
     soundError();
 
-    result.className = 'result-box show error';
+    result.className = '';
 
     result.innerHTML = `
       <div class="result-box-label">
