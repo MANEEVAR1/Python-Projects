@@ -194,7 +194,13 @@ Return ONLY the summary paragraph.
         timeout=60,
     )
 
-    response.raise_for_status()
+    if not response.ok:
+        app.logger.error(
+            "Groq API error | Status: %s | Response: %s",
+            response.status_code,
+            response.text
+        )
+        response.raise_for_status()
 
     data = response.json()
 
