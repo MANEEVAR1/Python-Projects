@@ -130,46 +130,27 @@ def fetch_articles(source, feed_url):
 
 def summarize_article(article):
     prompt = f"""
-You are a professional technology, AI, business,
-finance, and startup news editor.
+Write an informative summary of this news story in 70-85 words.
 
-Write an informative summary of approximately
-75 words for this news story.
+Explain:
+- What happened?
+- What are the key facts?
+- Why does it matter?
 
-STRICT RULES:
+Use simple English. Write one paragraph.
+Never invent facts. Do not include links or repeat the headline.
 
-1. Explain the main development clearly.
-2. Include important facts, figures, and names.
-3. Explain what happened and why it matters.
-4. Use simple, natural, understandable English.
-5. Write one connected paragraph.
-6. Aim for 70-85 words.
-7. Do not use bullet points.
-8. Do not include URLs or links.
-9. Do not repeat the headline.
-10. Do not add labels such as "Summary:".
-11. Never invent facts or unsupported details.
-12. Do not present speculation as confirmed news.
-13. If the available information is insufficient,
-    clearly acknowledge the limitation.
-
+Headline: {article['title']}
 Publisher: {article['source']}
+Article excerpt: {article['excerpt']}
 
-Headline:
-{article['title']}
-
-Available article text:
-{article['excerpt']}
-
-Return ONLY the summary paragraph.
+Return only the summary.
 """
 
     response = requests.post(
         GROQ_URL,
         headers={
-            "Authorization": (
-                f"Bearer {os.environ['GROQ_API_KEY']}"
-            ),
+            "Authorization": f"Bearer {os.environ['GROQ_API_KEY']}",
             "Content-Type": "application/json",
         },
         json={
@@ -177,34 +158,42 @@ Return ONLY the summary paragraph.
             "messages": [
                 {
                     "role": "system",
-                    "content": (
-                        "You are a careful news editor. "
-                        "Write accurate, informative summaries "
-                        "in simple English. Never fabricate facts."
-                    ),
+                    "content": "You are a factual news editor."
                 },
                 {
                     "role": "user",
-                    "content": prompt,
-                },
+                    "content": prompt
+                }
             ],
             "temperature": 0.2,
-            "max_tokens": 220,
+            "max_tokens": 250,
         },
         timeout=60,
     )
 
     if not response.ok:
         app.logger.error(
-            "Groq API error | Status: %s | Response: %s",
-            response.status_code,
+            "Groq API error: %s",
             response.text
         )
         response.raise_for_status()
 
     data = response.json()
 
-    return data["choices"][0]["message"]["content"].strip()
+    summary = (
+        data.get("choices", [{}])[0]
+        .get("message", {})
+        .get("content", "")
+    )
+
+    if not summary or not summary.strip():
+        app.logger.error(
+            "Groq returned an empty summary: %s",
+            data
+        )
+        raise ValueError("Groq returned an empty summary.")
+
+    return summary.strip()
 
 
 # --------------------------------------------------
@@ -217,16 +206,21 @@ def format_story(article, story_number):
     try:
         summary = summarize_article(article)
 
+
     except Exception:
+
         app.logger.exception(
+
             "Summary generation failed for: %s",
-            article["title"],
+
+            article["title"]
+
         )
 
         summary = (
-            "A detailed summary could not be generated "
-            "from the available information. "
-            "The story requires further review."
+
+            "Summary unavailable. Please try again later."
+
         )
 
     summary = html.escape(summary)
