@@ -158,15 +158,20 @@ Return only the summary.
             "messages": [
                 {
                     "role": "system",
-                    "content": "You are a factual news editor."
+                    "content": (
+                        "You are a factual news editor. "
+                        "Write accurate summaries in simple English."
+                    ),
                 },
                 {
                     "role": "user",
-                    "content": prompt
-                }
+                    "content": prompt,
+                },
             ],
-            "temperature": 0.2,
-            "max_tokens": 250,
+            "temperature": 0.3,
+            "max_completion_tokens": 1200,
+            "reasoning_effort": "low",
+            "include_reasoning": False,
         },
         timeout=60,
     )
