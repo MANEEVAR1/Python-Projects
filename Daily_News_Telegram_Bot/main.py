@@ -1,3 +1,4 @@
+import threading
 import os
 import re
 import html
@@ -762,44 +763,42 @@ def health():
 # --------------------------------------------------
 # SCHEDULED EXECUTION ENDPOINT
 # --------------------------------------------------
+digest_lock = threading.Lock()
+
+
+def run_digest_background():
+    try:
+        with digest_lock:
+            generate_digest()
+    except Exception:
+        app.logger.exception("Background digest failed")
 
 @app.post("/run")
 def run_news():
     secret = os.environ.get("RUN_SECRET", "")
-    supplied = request.headers.get(
-        "X-Run-Secret",
-        "",
-    )
+    supplied = request.headers.get("X-Run-Secret", "")
 
     if (
         not secret
         or not supplied
-        or not hmac.compare_digest(
-            secret,
-            supplied,
-        )
+        or not hmac.compare_digest(secret, supplied)
     ):
+        return jsonify({"error": "Unauthorized"}), 401
+
+    if digest_lock.locked():
         return jsonify({
-            "error": "Unauthorized"
-        }), 401
+            "status": "Digest already running"
+        }), 409
 
-    try:
-        generate_digest()
+    thread = threading.Thread(
+        target=run_digest_background,
+        daemon=True,
+    )
+    thread.start()
 
-        return jsonify({
-            "status": "News digest sent successfully"
-        }), 200
-
-    except Exception:
-        app.logger.exception(
-            "Digest generation failed"
-        )
-
-        return jsonify({
-            "error": (
-                "Digest failed. Check Render logs."
-            )
-        }), 500
+    return jsonify({
+        "status": "Digest started"
+    }), 202
 
 
 # --------------------------------------------------
